@@ -91,68 +91,98 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.session_state.tech_bat = True
             st.success("✅ BRAVO. Interdiction formelle.")
 
-    # --- MODULE 3 : STABILITÉ (QUIZ PLAQUES) ---
+ # --- MODULE 3 : STABILITÉ (MISE EN PAGE CÔTE À CÔTE) ---
     elif menu_485 == "3. Stabilité (p.34)":
         st.header("⚖️ Exercice : Plaques de Charge")
-        st.write("Analysez le document ci-dessous (Réponses p.59).")
-        
-        # --- C'EST ICI QUE J'AI MIS LE BON NOM ---
-        # Si votre image est en .jpg, changez juste .png en .jpg ci-dessous
-        try:
-            st.image("quizz_plaque_de_charge_gerbeur.png", caption="Exercice Auto-Test Livret", use_column_width=True)
-        except:
-            st.error("⚠️ Image introuvable. Vérifiez que le nom sur GitHub est bien 'quizz_plaque_de_charge_gerbeur.png'")
-
-        st.markdown("---")
+        st.write("Analysez les documents pour répondre (Réponses p.59).")
         
         # Initialisation des mémoires
         init_state("plaque_q1"); init_state("plaque_q2"); init_state("plaque_q3"); init_state("plaque_q4")
 
-        # QUESTION 1
-        st.subheader("1. Tableau du haut")
-        st.write("Pour lever **630 kg** (Longueur 1200mm = CDG 600mm), quelle est la hauteur max ?")
-        c1, c2 = st.columns(2)
-        if c1.button("4000 mm") or st.session_state.plaque_q1:
-            st.session_state.plaque_q1 = True
-            st.success("✅ 4000 mm (Correct !)")
-        if c2.button("4300 mm"):
-            st.error("❌ Non. À 4300mm, la limite est de 550kg (voir case au-dessus).")
+        st.markdown("---")
+
+        # =========================================================
+        # BLOC 1 : TABLEAU DU HAUT (QUESTIONS 1 & 2)
+        # =========================================================
+        # On divise l'écran : Image à gauche (col_img) / Questions à droite (col_txt)
+        col_img1, col_txt1 = st.columns([1, 1])
+        
+        with col_img1:
+            try:
+                st.image("quizz_plaque_de_charge_gerbeur_haut.png", use_column_width=True)
+            except:
+                st.error("⚠️ Image 'quizz_plaque_de_charge_gerbeur_haut.png' manquante.")
+
+        with col_txt1:
+            # QUESTION 1
+            st.subheader("1. Hauteur max ?")
+            st.write("Pour **630 kg** (Long. 1200mm = CDG 600mm) :")
+            b1, b2 = st.columns(2)
+            if b1.button("4000 mm") or st.session_state.plaque_q1:
+                st.session_state.plaque_q1 = True
+                st.success("✅ 4000 mm")
+            if b2.button("4300 mm"):
+                st.error("❌ Non (Max 550kg)")
+
+            st.markdown("---")
+
+            # QUESTION 2
+            st.subheader("2. Poids max ?")
+            st.write("À **4300 mm** avec charge longue (1400mm = CDG 700mm) :")
+            b3, b4 = st.columns(2)
+            if b3.button("330 kg") or st.session_state.plaque_q2:
+                st.session_state.plaque_q2 = True
+                st.success("✅ 330 kg")
+            if b4.button("550 kg"):
+                st.error("❌ Non (C'est pour CDG 600)")
 
         st.markdown("---")
 
-        # QUESTION 2
-        st.subheader("2. Tableau du haut")
-        st.write("À **4300 mm** de haut, avec une charge longue (1400mm = CDG 700mm), quel poids max ?")
-        c3, c4 = st.columns(2)
-        if c3.button("330 kg") or st.session_state.plaque_q2:
-            st.session_state.plaque_q2 = True
-            st.success("✅ 330 kg (Dernière colonne, ligne du haut)")
-        if c4.button("550 kg"):
-            st.error("❌ Non, 550kg c'est pour une charge standard (CDG 500/600).")
+        # =========================================================
+        # BLOC 2 : GRAPHIQUE DU MILIEU (QUESTION 3)
+        # =========================================================
+        col_img2, col_txt2 = st.columns([1, 1])
+
+        with col_img2:
+            try:
+                st.image("quizz_plaque_de_charge_gerbeur_milieu.png", use_column_width=True)
+            except:
+                st.error("⚠️ Image 'quizz_plaque_de_charge_gerbeur_milieu.png' manquante.")
+        
+        with col_txt2:
+            # QUESTION 3
+            st.subheader("3. Graphique")
+            st.write("Charge **1400 kg**, CDG à **400 mm**. Hauteur max ?")
+            b5, b6 = st.columns(2)
+            if b5.button("3884 mm") or st.session_state.plaque_q3:
+                st.session_state.plaque_q3 = True
+                st.success("✅ 3884 mm")
+            if b6.button("4224 mm"):
+                st.error("❌ Non (Trop lourd)")
 
         st.markdown("---")
 
-        # QUESTION 3
-        st.subheader("3. Graphique (Milieu)")
-        st.write("Charge de **1400 kg**, CDG à **400 mm**. Quelle hauteur max ?")
-        c5, c6 = st.columns(2)
-        if c5.button("3884 mm") or st.session_state.plaque_q3:
-            st.session_state.plaque_q3 = True
-            st.success("✅ 3884 mm (Intersection de la ligne 1400 et 400)")
-        if c6.button("4224 mm"):
-            st.error("❌ Non, ça c'est pour une charge plus légère (ex: 1000kg).")
-            
-        st.markdown("---")
+        # =========================================================
+        # BLOC 3 : PLAQUE DU BAS (QUESTION 4)
+        # =========================================================
+        col_img3, col_txt3 = st.columns([1, 1])
 
-        # QUESTION 4
-        st.subheader("4. Plaque du bas (Constructeur)")
-        st.write("D'après cette plaque, je peux déplacer :")
-        c7, c8 = st.columns(2)
-        if c7.button("1200 kg à 600 mm") or st.session_state.plaque_q4:
-            st.session_state.plaque_q4 = True
-            st.success("✅ EXACT (Capacité nominale)")
-        if c8.button("1556 kg à 300 mm"):
-            st.error("❌ Non, 1556kg c'est le poids du chariot à vide !")
+        with col_img3:
+            try:
+                st.image("quizz_plaque_de_charge_gerbeur_bas.png", use_column_width=True)
+            except:
+                st.error("⚠️ Image 'quizz_plaque_de_charge_gerbeur_bas.png' manquante.")
+        
+        with col_txt3:
+            # QUESTION 4
+            st.subheader("4. Plaque Constructeur")
+            st.write("D'après cette plaque, je peux déplacer :")
+            b7, b8 = st.columns(2)
+            if b7.button("1200 kg à 600 mm") or st.session_state.plaque_q4:
+                st.session_state.plaque_q4 = True
+                st.success("✅ VRAI (Capacité Nominale)")
+            if b8.button("1556 kg à 300 mm"):
+                st.error("❌ Non (Poids à vide)")
 
     # --- MODULE 4 : CONDUITE ---
     elif menu_485 == "4. Conduite (p.54)":
