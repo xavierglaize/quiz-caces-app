@@ -153,29 +153,25 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("1556kg à 300mm", key="btn_q4_b"):
                 st.error("❌ Non (Poids à vide)")
 
-    # --- MODULE 4 : CONDUITE (RESTITUÉ) ---
+  # --- MODULE 4 : CONDUITE ---
     elif menu_485 == "4. Conduite (p.54)":
         st.header("🚦 Règles de Conduite")
         init_state("cond_q1")
         init_state("cond_q2")
         
         st.write("**1. Distance de sécurité entre 2 gerbeurs ?**")
-        c1, c2 = st.columns(2)
-        if c1.button("1 mètre"): st.error("❌ Trop près !")
-        if c2.button("3 gerbeurs") or st.session_state.cond_q1:
+        if st.button("3 gerbeurs") or st.session_state.cond_q1:
             st.session_state.cond_q1 = True
             st.success("✅ CORRECT (env. 3 à 5m)")
         
         st.markdown("---")
         
         st.write("**2. Dans une pente, la charge doit être...**")
-        c3, c4 = st.columns(2)
-        if c3.button("Vers le bas (Aval)"): st.error("❌ DANGER ! La charge glisse.")
-        if c4.button("Vers l'AMONT (Haut)") or st.session_state.cond_q2:
+        if st.button("Vers l'AMONT (Haut)") or st.session_state.cond_q2:
             st.session_state.cond_q2 = True
-            st.success("✅ CORRECT (Plaquée au dosseret)")
+            st.success("✅ CORRECT (Pour la plaquer au dosseret)")
 
-    # --- MODULE 5 : SIGNALISATION (RESTITUÉ) ---
+    # --- MODULE 5 : SIGNALISATION ---
     elif menu_485 == "5. Signalisation (p.58)":
         st.header("🚧 Panneaux")
         st.write("Cliquez pour révéler la signification.")
