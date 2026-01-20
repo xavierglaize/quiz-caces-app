@@ -105,7 +105,7 @@ if livret == "CACES R.485 (Gerbeurs)":
         # BLOC 1 : TABLEAU DU HAUT (QUESTIONS 1 & 2)
         # =========================================================
         # On divise l'écran : Image à gauche (col_img) / Questions à droite (col_txt)
-        col_img1, col_txt1 = st.columns([1, 1])
+        col_img1, col_txt1 = st.columns([3, 1])
         
         with col_img1:
             try:
@@ -141,7 +141,7 @@ if livret == "CACES R.485 (Gerbeurs)":
         # =========================================================
         # BLOC 2 : GRAPHIQUE DU MILIEU (QUESTION 3)
         # =========================================================
-        col_img2, col_txt2 = st.columns([1, 1])
+        col_img2, col_txt2 = st.columns([3, 1])
 
         with col_img2:
             try:
@@ -165,7 +165,7 @@ if livret == "CACES R.485 (Gerbeurs)":
         # =========================================================
         # BLOC 3 : PLAQUE DU BAS (QUESTION 4)
         # =========================================================
-        col_img3, col_txt3 = st.columns([1, 1])
+        col_img3, col_txt3 = st.columns([3, 1])
 
         with col_img3:
             try:
