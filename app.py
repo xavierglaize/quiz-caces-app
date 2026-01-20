@@ -1,6 +1,12 @@
 import streamlit as st
 from PIL import Image
 
+# --- AJOUTEZ CECI ---
+@st.cache_data 
+def load_image(image_path):
+    return Image.open(image_path)
+# --------------------
+
 # --- CONFIGURATION GÉNÉRALE ---
 st.set_page_config(page_title="Hub Formation CACES", layout="centered", page_icon="🏗️")
 
