@@ -521,4 +521,156 @@ if livret == "CACES R.485 (Gerbeurs)":
         st.markdown("---")
 
         st.subheader("4. Fumer en chargeant ?")
-        c7, c8 = st.columns(
+        c7, c8 = st.columns(2)
+        if c7.button("VRAI", key="vf4_v"): st.error("💥 DANGER !")
+        if c8.button("FAUX", key="vf4_f") or st.session_state.verif_q4:
+            st.session_state.verif_q4 = True
+            st.success("✅ FAUX")
+        st.markdown("---")
+
+        st.subheader("5. Attendre fin poste si panne ?")
+        c9, c10 = st.columns(2)
+        if c9.button("VRAI", key="vf5_v"): st.error("❌ NON")
+        if c10.button("FAUX", key="vf5_f") or st.session_state.verif_q5:
+            st.session_state.verif_q5 = True
+            st.success("✅ FAUX (Arrêt immédiat)")
+
+    # --- MODULE 11 : GERBAGE ---
+    elif menu_485 == "11. Gerbage (Vrai/Faux)":
+        st.header("📦 Gerbage")
+        init_state("gerb_q1"); init_state("gerb_q2"); init_state("gerb_q3"); init_state("gerb_q4"); init_state("gerb_q5")
+        st.markdown("---")
+
+        st.subheader("1. Lourd en bas ?")
+        c1, c2 = st.columns(2)
+        if c1.button("VRAI", key="gb1_v") or st.session_state.gerb_q1:
+            st.session_state.gerb_q1 = True
+            st.success("✅ VRAI")
+        if c2.button("FAUX", key="gb1_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("2. Pas vérifier palettier ?")
+        c3, c4 = st.columns(2)
+        if c3.button("VRAI", key="gb2_v"): st.error("❌ FAUX")
+        if c4.button("FAUX", key="gb2_f") or st.session_state.gerb_q2:
+            st.session_state.gerb_q2 = True
+            st.success("✅ FAUX (Toujours vérifier)")
+        st.markdown("---")
+
+        st.subheader("3. Poids connu avant ?")
+        c5, c6 = st.columns(2)
+        if c5.button("VRAI", key="gb3_v") or st.session_state.gerb_q3:
+            st.session_state.gerb_q3 = True
+            st.success("✅ VRAI")
+        if c6.button("FAUX", key="gb3_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("4. Vérifier pont liaison ?")
+        c7, c8 = st.columns(2)
+        if c7.button("VRAI", key="gb4_v") or st.session_state.gerb_q4:
+            st.session_state.gerb_q4 = True
+            st.success("✅ VRAI")
+        if c8.button("FAUX", key="gb4_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("5. Capacité Palettier ?")
+        c9, c10 = st.columns(2)
+        if c9.button("VRAI", key="gb5_v") or st.session_state.gerb_q5:
+            st.session_state.gerb_q5 = True
+            st.success("✅ VRAI")
+        if c10.button("FAUX", key="gb5_f"): st.error("❌ Erreur")
+
+    # --- MODULE 12 : CIRCULATION ---
+    elif menu_485 == "12. Circulation (Vrai/Faux)":
+        st.header("🚦 Circulation")
+        init_state("circ_q1"); init_state("circ_q2"); init_state("circ_q3"); init_state("circ_q4"); init_state("circ_q5")
+        st.markdown("---")
+
+        st.subheader("1. Interdit charge haute ?")
+        c1, c2 = st.columns(2)
+        if c1.button("VRAI", key="cr1_v") or st.session_state.circ_q1:
+            st.session_state.circ_q1 = True
+            st.success("✅ VRAI")
+        if c2.button("FAUX", key="cr1_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("2. Transport collègue ?")
+        c3, c4 = st.columns(2)
+        if c3.button("VRAI", key="cr2_v"): st.error("❌ FAUX")
+        if c4.button("FAUX", key="cr2_f") or st.session_state.circ_q2:
+            st.session_state.circ_q2 = True
+            st.success("✅ FAUX")
+        st.markdown("---")
+
+        st.subheader("3. Arrêt = Fourches au sol ?")
+        c5, c6 = st.columns(2)
+        if c5.button("VRAI", key="cr3_v") or st.session_state.circ_q3:
+            st.session_state.circ_q3 = True
+            st.success("✅ VRAI")
+        if c6.button("FAUX", key="cr3_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("4. Téléphone en roulant ?")
+        c7, c8 = st.columns(2)
+        if c7.button("VRAI", key="cr4_v"): st.error("❌ NON")
+        if c8.button("FAUX", key="cr4_f") or st.session_state.circ_q4:
+            st.session_state.circ_q4 = True
+            st.success("✅ FAUX")
+        st.markdown("---")
+
+        st.subheader("5. Distance 3 gerbeurs ?")
+        c9, c10 = st.columns(2)
+        if c9.button("VRAI", key="cr5_v") or st.session_state.circ_q5:
+            st.session_state.circ_q5 = True
+            st.success("✅ VRAI")
+        if c10.button("FAUX", key="cr5_f"): st.error("❌ Erreur")
+
+    # --- MODULE 13 : PICTOGRAMMES ---
+    elif menu_485 == "13. Pictogrammes (Auto-Test)":
+        st.header("🛑 Pictogrammes")
+        st.write("Trouvez la bonne correspondance.")
+        try: st.image("quizz_pictogrammes.png", use_column_width=True)
+        except: st.error("⚠️ Manque: quizz_pictogrammes.png")
+        
+        for i in range(1, 11): init_state(f"pic_q{i}")
+        st.markdown("---")
+
+        # Questions en boucle pour gagner de la place
+        quiz_data = [
+            ("1. Toxique ?", "D (Tête de mort)"),
+            ("2. Centre de gravité ?", "E (Cible)"),
+            ("3. Fragile ?", "C (Verre)"),
+            ("4. Ne pas empiler ?", "A (Boîte barrée)"),
+            ("5. Gaz sous pression ?", "B (Bouteille)"),
+            ("6. Interdit chariots ?", "D (Rond rouge)"),
+            ("7. Passage Piétons ?", "A (Rond bleu)"),
+            ("8. Vitesse mini ?", "C (30)"),
+            ("9. Premiers secours ?", "E (Croix verte)"),
+            ("10. Lance incendie ?", "B (Carré rouge)")
+        ]
+        
+        for i, (q_txt, rep) in enumerate(quiz_data):
+            st.write(f"**{q_txt}**")
+            k_suffix = f"p{i+1}"
+            
+            # 3 choix fictifs dont la bonne réponse
+            # Pour faire simple ici, je mets 3 boutons génériques A/B/C ou D/E/F selon la question
+            # mais avec la logique : seul le bon bouton valide
+            
+            c1, c2, c3 = st.columns(3)
+            # Bouton 1 (Faux)
+            if c1.button("Mauvais", key=f"{k_suffix}_bad1"): st.error("❌ Non")
+            # Bouton 2 (Bon)
+            if c2.button(rep, key=f"{k_suffix}_good") or st.session_state[f"pic_q{i+1}"]:
+                st.session_state[f"pic_q{i+1}"] = True
+                st.success("✅ VRAI")
+            # Bouton 3 (Faux)
+            if c3.button("Autre", key=f"{k_suffix}_bad2"): st.error("❌ Non")
+            st.markdown("---")
+
+# ==============================================================================
+# AUTRES LIVRETS
+# ==============================================================================
+else:
+    st.title(f"🚧 {livret}")
+    st.info("Module en construction.")
