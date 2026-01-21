@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image
-import random  # <--- AJOUTER CETTE LIGNE
+import random  # <--- INDISPENSABLE POUR LE TRONC COMMUN
 
 # --- CONFIGURATION GÉNÉRALE ---
 st.set_page_config(page_title="Hub Formation CACES", layout="centered", page_icon="🏗️")
@@ -43,10 +43,10 @@ st.sidebar.markdown("---")
 # ==============================================================================
 if livret == "CACES R.485 (Gerbeurs)":
     
-    # LISTE DES MODULES (Mise à jour avec 13 modules)
+    # LISTE COMPLETE (TRONC COMMUN + 13 MODULES)
     menu_485 = st.sidebar.radio("Modules R.485 :", 
         ["Accueil R.485", 
-         "0. Tronc Commun (Aléatoire)", 
+         "0. Tronc Commun (Aléatoire)",
          "1. Catégories (p.12)", 
          "2. Technique (p.23)", 
          "3. Stabilité (p.34)", 
@@ -64,20 +64,20 @@ if livret == "CACES R.485 (Gerbeurs)":
     # --- ACCUEIL ---
     if menu_485 == "Accueil R.485":
         st.title("🏗️ Formation Gerbeurs R.485")
-        st.info("Bienvenue. Ce module utilise la méthode de la **Photo Mentale**.")
-        st.write("Les réponses correctes resteront affichées pour faciliter votre mémorisation.")
-        # --- MODULE TRONC COMMUN (ALÉATOIRE) ---
+        st.info("Bienvenue. Sélectionnez un module à gauche.")
+        st.write("Les modules 1 à 13 suivent votre livret. Le module 0 est un entraînement aléatoire.")
+
+    # --- MODULE 0 : TRONC COMMUN (ALÉATOIRE) ---
     elif menu_485 == "0. Tronc Commun (Aléatoire)":
-        st.header("🎲 Tronc Commun - Test Aléatoire")
-        st.write("Ce module pioche 3 questions au hasard dans la banque de données commune.")
+        st.header("🎲 Test Aléatoire (Tronc Commun)")
+        st.write("Ce module pioche 3 questions au hasard dans la banque de données.")
         
-        # --- ETAPE 1 : LA BANQUE DE QUESTIONS (TRONC COMMUN) ---
-        # On peut en mettre 50 ici, ça ne prend pas de place !
+        # BANQUE DE QUESTIONS (Vous pourrez en ajouter plein ici !)
         banque_questions = [
             {
                 "question": "Quelle est la distance de sécurité entre deux chariots ?",
-                "options": ["1 mètre", "3 longueurs de chariot", "10 mètres"],
-                "reponse": "3 longueurs de chariot",
+                "options": ["1 mètre", "3 longueurs de chariot (ou 5m)", "10 mètres"],
+                "reponse": "3 longueurs de chariot (ou 5m)",
                 "explication": "Règle de base pour éviter les collisions."
             },
             {
@@ -88,8 +88,8 @@ if livret == "CACES R.485 (Gerbeurs)":
             },
             {
                 "question": "En cas de fuite d'acide sur la batterie, je rince avec :",
-                "options": ["De l'eau", "Du sable", "Un chiffon sec"],
-                "reponse": "De l'eau",
+                "options": ["De l'eau abondante", "Du sable", "Un chiffon sec"],
+                "reponse": "De l'eau abondante",
                 "explication": "L'eau dilue l'acide. Attention aux yeux !"
             },
             {
@@ -103,40 +103,37 @@ if livret == "CACES R.485 (Gerbeurs)":
                 "options": ["Vitesse excessive en virage", "Panne de batterie", "Klaxon défectueux"],
                 "reponse": "Vitesse excessive en virage",
                 "explication": "La force centrifuge déstabilise le chariot."
+            },
+            {
+                "question": "Je peux utiliser mon téléphone :",
+                "options": ["Jamais en conduisant", "Si je roule doucement", "Avec des écouteurs"],
+                "reponse": "Jamais en conduisant",
+                "explication": "Distraction interdite."
             }
         ]
 
-        # --- ETAPE 2 : LE TIRAGE AU SORT (MÉMOIRE) ---
-        # On vérifie si on a déjà tiré des questions, sinon on le fait
+        # TIRAGE AU SORT (S'il n'est pas déjà fait)
         if "questions_du_jour" not in st.session_state:
-            # On pioche 3 questions au hasard
             st.session_state.questions_du_jour = random.sample(banque_questions, 3)
-            # On initialise les réponses utilisateur
-            st.session_state.reponses_user = {}
-
-        # Bouton pour tout changer
-        if st.button("🔄 Générer une nouvelle série de questions"):
+        
+        # BOUTON RELANCE
+        if st.button("🔄 NOUVEAU TIRAGE"):
             st.session_state.questions_du_jour = random.sample(banque_questions, 3)
-            st.session_state.reponses_user = {} # Reset des réponses
             st.rerun()
 
         st.markdown("---")
 
-        # --- ETAPE 3 : L'AFFICHAGE DYNAMIQUE ---
-        # On boucle sur les 3 questions piochées
+        # AFFICHAGE DES QUESTIONS
         for i, q in enumerate(st.session_state.questions_du_jour):
             st.subheader(f"Question {i+1}")
             st.write(f"**{q['question']}**")
-            
-            # On crée une clé unique pour chaque question
-            choix = st.radio(f"Votre réponse (Q{i+1}) :", q['options'], key=f"radio_{i}", index=None)
+            choix = st.radio(f"Votre réponse :", q['options'], key=f"rd_{i}", index=None)
             
             if choix:
                 if choix == q['reponse']:
                     st.success(f"✅ BRAVO ! {q['explication']}")
                 else:
                     st.error(f"❌ FAUX. La bonne réponse était : {q['reponse']}")
-            
             st.markdown("---")
 
     # --- MODULE 1 : CATÉGORIES ---
@@ -155,7 +152,6 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("Est-ce un R.485 ? (3)") or st.session_state.cat_q3:
                 st.session_state.cat_q3 = True
                 st.success("✅ OUI (Catégorie 1 ou 2)")
-
         with col2:
             st.info("🖼️ [IMAGE TRANSPALETTE]")
             if st.button("Est-ce un R.485 ? (2)") or st.session_state.cat_q2:
@@ -181,7 +177,6 @@ if livret == "CACES R.485 (Gerbeurs)":
     # --- MODULE 3 : STABILITÉ ---
     elif menu_485 == "3. Stabilité (p.34)":
         st.header("⚖️ Exercice : Plaques de Charge")
-        st.write("Analysez les documents pour répondre (Réponses p.59).")
         init_state("plaque_q1"); init_state("plaque_q2"); init_state("plaque_q3"); init_state("plaque_q4")
         st.markdown("---")
 
@@ -195,16 +190,14 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("4000 mm", key="btn_q1_a") or st.session_state.plaque_q1:
                 st.session_state.plaque_q1 = True
                 st.success("✅ 4000 mm")
-            if st.button("4300 mm", key="btn_q1_b"):
-                st.error("❌ Non")
+            if st.button("4300 mm", key="btn_q1_b"): st.error("❌ Non")
             st.write("---")
             st.markdown("#### 2. Poids max ?")
             st.write("À **4300 mm** (Charge longue) :")
             if st.button("330 kg", key="btn_q2_a") or st.session_state.plaque_q2:
                 st.session_state.plaque_q2 = True
                 st.success("✅ 330 kg")
-            if st.button("550 kg", key="btn_q2_b"):
-                st.error("❌ Non")
+            if st.button("550 kg", key="btn_q2_b"): st.error("❌ Non")
         st.markdown("---")
 
         col_img2, col_txt2 = st.columns([3, 1])
@@ -217,8 +210,7 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("3884 mm", key="btn_q3_a") or st.session_state.plaque_q3:
                 st.session_state.plaque_q3 = True
                 st.success("✅ 3884 mm")
-            if st.button("4224 mm", key="btn_q3_b"):
-                st.error("❌ Trop haut")
+            if st.button("4224 mm", key="btn_q3_b"): st.error("❌ Trop haut")
         st.markdown("---")
 
         col_img3, col_txt3 = st.columns([3, 1])
@@ -231,14 +223,12 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("1200kg à 600mm", key="btn_q4_a") or st.session_state.plaque_q4:
                 st.session_state.plaque_q4 = True
                 st.success("✅ EXACT")
-            if st.button("1556kg à 300mm", key="btn_q4_b"):
-                st.error("❌ Non")
+            if st.button("1556kg à 300mm", key="btn_q4_b"): st.error("❌ Non")
 
     # --- MODULE 4 : CONDUITE ---
     elif menu_485 == "4. Conduite (p.54)":
         st.header("🚦 Règles de Conduite")
         init_state("cond_q1"); init_state("cond_q2")
-        
         st.write("**1. Distance de sécurité entre 2 gerbeurs ?**")
         c1, c2 = st.columns(2)
         if c1.button("1 mètre"): st.error("❌ Trop près !")
@@ -246,7 +236,6 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.session_state.cond_q1 = True
             st.success("✅ CORRECT")
         st.markdown("---")
-        
         st.write("**2. Dans une pente, la charge doit être...**")
         c3, c4 = st.columns(2)
         if c3.button("Vers le bas (Aval)"): st.error("❌ DANGER !")
@@ -257,9 +246,7 @@ if livret == "CACES R.485 (Gerbeurs)":
     # --- MODULE 5 : SIGNALISATION ---
     elif menu_485 == "5. Signalisation (p.58)":
         st.header("🚧 Panneaux")
-        st.write("Cliquez pour révéler la signification.")
         init_state("sig_tox"); init_state("sig_epi")
-        
         c1, c2 = st.columns(2)
         with c1:
             st.write("☠️ **Tête de Mort**")
@@ -276,18 +263,18 @@ if livret == "CACES R.485 (Gerbeurs)":
     elif menu_485 == "6. Organes (Auto-Test)":
         st.header("🔧 Identification des Organes")
         init_state("org_q1"); init_state("org_q2"); init_state("org_q3"); init_state("org_q4"); init_state("org_q5")
-
         st.markdown("---")
+        
         col1, col2 = st.columns([1, 2])
         with col1:
             try: st.image("Image1.png", use_column_width=True)
             except: st.error("Manque Image1.png")
         with col2:
-            st.markdown("#### 1. Quel est cet élément ?")
-            if st.button("Dispositif de condamnation", key="btn_o1_a"): st.error("❌ Non")
+            st.markdown("#### 1. Élément ?")
+            if st.button("Dispositif condamnation", key="btn_o1_a"): st.error("❌ Non")
             if st.button("Commande anti-écrasement", key="btn_o1_b") or st.session_state.org_q1:
                 st.session_state.org_q1 = True
-                st.success("✅ EXACT (Sécurité ventrale)")
+                st.success("✅ EXACT")
             if st.button("Avertisseur sonore", key="btn_o1_c"): st.error("❌ Non")
         st.markdown("---")
 
@@ -296,12 +283,12 @@ if livret == "CACES R.485 (Gerbeurs)":
             try: st.image("Image2.png", use_column_width=True)
             except: st.error("Manque Image2.png")
         with col4:
-            st.markdown("#### 2. Quel est cet élément ?")
+            st.markdown("#### 2. Élément ?")
             if st.button("Digicode / Clé", key="btn_o2_a") or st.session_state.org_q2:
                 st.session_state.org_q2 = True
-                st.success("✅ EXACT (Condamnation)")
-            if st.button("Sélecteur de programme", key="btn_o2_b"): st.error("❌ Non")
-            if st.button("Indicateur de décharge", key="btn_o2_c"): st.error("❌ Non")
+                st.success("✅ EXACT")
+            if st.button("Sélecteur", key="btn_o2_b"): st.error("❌ Non")
+            if st.button("Indicateur décharge", key="btn_o2_c"): st.error("❌ Non")
         st.markdown("---")
 
         col5, col6 = st.columns([1, 2])
@@ -309,12 +296,12 @@ if livret == "CACES R.485 (Gerbeurs)":
             try: st.image("Image3.png", use_column_width=True)
             except: st.error("Manque Image3.png")
         with col6:
-            st.markdown("#### 3. Quel est cet élément ?")
+            st.markdown("#### 3. Élément ?")
             if st.button("Roue directrice", key="btn_o3_a"): st.error("❌ Non")
             if st.button("Galet porteur", key="btn_o3_b"): st.error("❌ Non")
             if st.button("Roue stabilisatrice", key="btn_o3_c") or st.session_state.org_q3:
                 st.session_state.org_q3 = True
-                st.success("✅ EXACT (Stabilité)")
+                st.success("✅ EXACT")
         st.markdown("---")
 
         col7, col8 = st.columns([1, 2])
@@ -323,7 +310,7 @@ if livret == "CACES R.485 (Gerbeurs)":
             except: st.error("Manque Image4.png")
         with col8:
             st.markdown("#### 4. Bouton Tortue ?")
-            if st.button("Vitesse lente (Timon vertical)", key="btn_o4_a") or st.session_state.org_q4:
+            if st.button("Vitesse lente", key="btn_o4_a") or st.session_state.org_q4:
                 st.session_state.org_q4 = True
                 st.success("✅ EXACT")
             if st.button("Klaxon", key="btn_o4_b"): st.error("❌ Non")
@@ -335,16 +322,16 @@ if livret == "CACES R.485 (Gerbeurs)":
             try: st.image("Image5.png", use_column_width=True)
             except: st.error("Manque Image5.png")
         with col10:
-            st.markdown("#### 5. Quel est cet élément ?")
+            st.markdown("#### 5. Élément ?")
             if st.button("Roue directrice", key="btn_o5_a") or st.session_state.org_q5:
                 st.session_state.org_q5 = True
-                st.success("✅ EXACT (Motrice)")
+                st.success("✅ EXACT")
             if st.button("Roue stabilisatrice", key="btn_o5_b"): st.error("❌ Non")
             if st.button("Roue libre", key="btn_o5_c"): st.error("❌ Non")
 
     # --- MODULE 7 : ACTEURS ---
     elif menu_485 == "7. Acteurs (Auto-Test)":
-        st.header("🤝 Les Acteurs de la Prévention")
+        st.header("🤝 Les Acteurs")
         init_state("act_q1"); init_state("act_q2"); init_state("act_q3"); init_state("act_q4"); init_state("act_q5")
         st.markdown("---")
 
@@ -352,7 +339,7 @@ if livret == "CACES R.485 (Gerbeurs)":
         c1, c2 = st.columns([2, 1])
         with c1:
             if st.button("La CARSAT", key="btn_a1_a"): st.error("❌ Non")
-            if st.button("L'Inspecteur du Travail", key="btn_a1_b") or st.session_state.act_q1:
+            if st.button("Inspecteur Travail", key="btn_a1_b") or st.session_state.act_q1:
                 st.session_state.act_q1 = True
                 st.success("✅ EXACT")
                 try: st.image("Acteur_Inspecteur.png", width=150)
@@ -360,7 +347,7 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("Le Fabricant", key="btn_a1_c"): st.error("❌ Non")
         st.markdown("---")
 
-        st.subheader("2. Responsable Marquage CE ?")
+        st.subheader("2. Marquage CE ?")
         c3, c4 = st.columns([2, 1])
         with c3:
             if st.button("Le Chef d'équipe", key="btn_a2_a"): st.error("❌ Non")
@@ -372,7 +359,7 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("L'Inspecteur", key="btn_a2_c"): st.error("❌ Non")
         st.markdown("---")
 
-        st.subheader("3. Organisme Prévention (Assurance) ?")
+        st.subheader("3. Organisme Prévention ?")
         c5, c6 = st.columns([2, 1])
         with c5:
             if st.button("Le CSE", key="btn_a3_a"): st.error("❌ Non")
@@ -383,7 +370,7 @@ if livret == "CACES R.485 (Gerbeurs)":
                 except: st.write("Manque img")
         st.markdown("---")
 
-        st.subheader("4. Enquêtes après accident ?")
+        st.subheader("4. Enquêtes accident ?")
         c7, c8 = st.columns([2, 1])
         with c7:
             if st.button("Le CSE / CSSCT", key="btn_a4_a") or st.session_state.act_q4:
@@ -391,14 +378,14 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.success("✅ EXACT")
                 try: st.image("Acteur_CSE.png", width=150)
                 except: st.write("Manque img")
-            if st.button("Médecine du travail", key="btn_a4_b"): st.error("❌ Non")
+            if st.button("Médecine travail", key="btn_a4_b"): st.error("❌ Non")
         st.markdown("---")
 
-        st.subheader("5. Responsable sécurité entreprise ?")
+        st.subheader("5. Responsable sécurité ?")
         c9, c10 = st.columns([2, 1])
         with c9:
             if st.button("Le Fabricant", key="btn_a5_a"): st.error("❌ Non")
-            if st.button("L'employeur / Personnel", key="btn_a5_b") or st.session_state.act_q5:
+            if st.button("L'employeur", key="btn_a5_b") or st.session_state.act_q5:
                 st.session_state.act_q5 = True
                 st.success("✅ EXACT")
                 try: st.image("Acteur_Personnel.png", width=150)
@@ -407,116 +394,72 @@ if livret == "CACES R.485 (Gerbeurs)":
     # --- MODULE 8 : CAUSES ACCIDENTS ---
     elif menu_485 == "8. Causes Accidents (Auto-Test)":
         st.header("⚠️ Causes d'accidents")
-        st.write("Classez la cause : **Conducteur**, **Matériel** ou **Environnement** ?")
         for i in range(1, 11): init_state(f"cause_q{i}")
         st.markdown("---")
 
-        st.markdown("#### 1. Mauvais positionnement des bras")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c1") or st.session_state.cause_q1:
-            st.session_state.cause_q1 = True
-            st.success("✅ CORRECT")
-        if c2.button("Matériel", key="m1"): st.error("❌ Non")
-        if c3.button("Environnement", key="e1"): st.error("❌ Non")
-        st.markdown("---")
+        # Questions simplifiées pour gain de place code (même logique)
+        q_data = [
+            ("1. Mauvais positionnement bras", "Conducteur", "c1"),
+            ("2. Mauvaise stabilisation", "Conducteur", "c2"),
+            ("3. Problème de direction", "Matériel", "m3"),
+            ("4. Manque de visibilité", "Environnement", "e4"),
+            ("5. Trou dans le sol", "Environnement", "e5"),
+            ("6. Vitesse excessive", "Conducteur", "c6"),
+            ("7. Roue défectueuse", "Matériel", "m7"),
+            ("8. Mauvaise évaluation charge", "Conducteur", "c8"),
+            ("9. Stockage dangereux", "Environnement", "e9"),
+            ("10. Problème de frein", "Matériel", "m10")
+        ]
 
-        st.markdown("#### 2. Mauvaise stabilisation")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c2") or st.session_state.cause_q2:
-            st.session_state.cause_q2 = True
-            st.success("✅ CORRECT")
-        if c2.button("Matériel", key="m2"): st.error("❌ Non")
-        if c3.button("Environnement", key="e2"): st.error("❌ Non")
-        st.markdown("---")
-
-        st.markdown("#### 3. Problème de direction")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c3"): st.error("❌ Non")
-        if c2.button("Matériel", key="m3") or st.session_state.cause_q3:
-            st.session_state.cause_q3 = True
-            st.success("✅ CORRECT")
-        if c3.button("Environnement", key="e3"): st.error("❌ Non")
-        st.markdown("---")
-
-        st.markdown("#### 4. Manque de visibilité (éclairage/obstacles)")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c4"): st.error("❌ Non")
-        if c2.button("Matériel", key="m4"): st.error("❌ Non")
-        if c3.button("Environnement", key="e4") or st.session_state.cause_q4:
-            st.session_state.cause_q4 = True
-            st.success("✅ CORRECT")
-        st.markdown("---")
-
-        st.markdown("#### 5. Trou dans le sol")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c5"): st.error("❌ Non")
-        if c2.button("Matériel", key="m5"): st.error("❌ Non")
-        if c3.button("Environnement", key="e5") or st.session_state.cause_q5:
-            st.session_state.cause_q5 = True
-            st.success("✅ CORRECT")
-        st.markdown("---")
-
-        st.markdown("#### 6. Vitesse excessive")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c6") or st.session_state.cause_q6:
-            st.session_state.cause_q6 = True
-            st.success("✅ CORRECT")
-        if c2.button("Matériel", key="m6"): st.error("❌ Non")
-        if c3.button("Environnement", key="e6"): st.error("❌ Non")
-        st.markdown("---")
-
-        st.markdown("#### 7. Roue défectueuse")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c7"): st.error("❌ Non")
-        if c2.button("Matériel", key="m7") or st.session_state.cause_q7:
-            st.session_state.cause_q7 = True
-            st.success("✅ CORRECT")
-        if c3.button("Environnement", key="e7"): st.error("❌ Non")
-        st.markdown("---")
-
-        st.markdown("#### 8. Mauvaise évaluation des charges")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c8") or st.session_state.cause_q8:
-            st.session_state.cause_q8 = True
-            st.success("✅ CORRECT")
-        if c2.button("Matériel", key="m8"): st.error("❌ Non")
-        if c3.button("Environnement", key="e8"): st.error("❌ Non")
-        st.markdown("---")
-
-        st.markdown("#### 9. Stockage dangereux (instable)")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c9"): st.error("❌ Non")
-        if c2.button("Matériel", key="m9"): st.error("❌ Non")
-        if c3.button("Environnement", key="e9") or st.session_state.cause_q9:
-            st.session_state.cause_q9 = True
-            st.success("✅ CORRECT")
-        st.markdown("---")
-
-        st.markdown("#### 10. Problème de frein")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("Conducteur", key="c10"): st.error("❌ Non")
-        if c2.button("Matériel", key="m10") or st.session_state.cause_q10:
-            st.session_state.cause_q10 = True
-            st.success("✅ CORRECT")
-        if c3.button("Environnement", key="e10"): st.error("❌ Non")
+        for i, (q_text, bon_choix, key_suffix) in enumerate(q_data):
+            st.markdown(f"#### {q_text}")
+            c1, c2, c3 = st.columns(3)
+            
+            # Gestion logique bouton
+            key_q = f"cause_q{i+1}"
+            
+            # Conducteur
+            if c1.button("Conducteur", key=f"btn_{i}_c"):
+                if bon_choix == "Conducteur": 
+                    st.session_state[key_q] = True
+                    st.success("✅ CORRECT")
+                else: st.error("❌ Non")
+            
+            # Matériel
+            if c2.button("Matériel", key=f"btn_{i}_m"):
+                if bon_choix == "Matériel":
+                    st.session_state[key_q] = True
+                    st.success("✅ CORRECT")
+                else: st.error("❌ Non")
+            
+            # Environnement
+            if c3.button("Environnement", key=f"btn_{i}_e"):
+                if bon_choix == "Environnement":
+                    st.session_state[key_q] = True
+                    st.success("✅ CORRECT")
+                else: st.error("❌ Non")
+            
+            # Si déjà trouvé avant
+            if st.session_state[key_q]:
+                st.success("✅ DÉJÀ TROUVÉ")
+            
+            st.markdown("---")
 
     # --- MODULE 9 : RÉGLEMENTATION ---
     elif menu_485 == "9. Réglementation (Vrai/Faux)":
-        st.header("📋 Réglementation & Responsabilités")
+        st.header("📋 Réglementation")
         init_state("reg_q1"); init_state("reg_q2"); init_state("reg_q3"); init_state("reg_q4"); init_state("reg_q5")
         st.markdown("---")
 
-        st.subheader("1. Formation")
-        st.write("🏗️ **« L'employeur a l'obligation de former ses salariés. »**")
+        st.subheader("1. Formation Obligatoire ?")
         c1, c2 = st.columns(2)
         if c1.button("VRAI", key="rg1_v") or st.session_state.reg_q1:
             st.session_state.reg_q1 = True
-            st.success("✅ VRAI (Obligation légale)")
+            st.success("✅ VRAI")
         if c2.button("FAUX", key="rg1_f"): st.error("❌ Erreur")
         st.markdown("---")
 
-        st.subheader("2. Responsabilité Matériel")
-        st.write("🔧 **« Le cariste est responsable du matériel. »**")
+        st.subheader("2. Cariste responsable matériel ?")
         c3, c4 = st.columns(2)
         if c3.button("VRAI", key="rg2_v") or st.session_state.reg_q2:
             st.session_state.reg_q2 = True
@@ -524,17 +467,15 @@ if livret == "CACES R.485 (Gerbeurs)":
         if c4.button("FAUX", key="rg2_f"): st.error("❌ Erreur")
         st.markdown("---")
 
-        st.subheader("3. Autorisation de Conduite")
-        st.write("📄 **« Délivrée par l'organisme de formation ? »**")
+        st.subheader("3. Autorisation par l'organisme ?")
         c5, c6 = st.columns(2)
-        if c5.button("VRAI", key="rg3_v"): st.error("❌ FAUX ! C'est l'EMPLOYEUR.")
+        if c5.button("VRAI", key="rg3_v"): st.error("❌ FAUX")
         if c6.button("FAUX", key="rg3_f") or st.session_state.reg_q3:
             st.session_state.reg_q3 = True
-            st.success("✅ FAUX (CACES = Organisme / Autorisation = Employeur)")
+            st.success("✅ FAUX (C'est l'employeur)")
         st.markdown("---")
 
-        st.subheader("4. Âge Minimum")
-        st.write("🔞 **« 18 ans minimum ? »**")
+        st.subheader("4. 18 ans minimum ?")
         c7, c8 = st.columns(2)
         if c7.button("VRAI", key="rg4_v") or st.session_state.reg_q4:
             st.session_state.reg_q4 = True
@@ -542,281 +483,42 @@ if livret == "CACES R.485 (Gerbeurs)":
         if c8.button("FAUX", key="rg4_f"): st.error("❌ Erreur")
         st.markdown("---")
 
-        st.subheader("5. Conducteur Occasionnel")
-        st.write("👷 **« Pas de formation pour un occasionnel ? »**")
+        st.subheader("5. Pas de formation pour occasionnel ?")
         c9, c10 = st.columns(2)
-        if c9.button("VRAI", key="rg5_v"): st.error("❌ FAUX ! Formation OBLIGATOIRE.")
+        if c9.button("VRAI", key="rg5_v"): st.error("❌ FAUX")
         if c10.button("FAUX", key="rg5_f") or st.session_state.reg_q5:
             st.session_state.reg_q5 = True
             st.success("✅ FAUX")
 
     # --- MODULE 10 : VÉRIFICATIONS ---
     elif menu_485 == "10. Vérifications (Vrai/Faux)":
-        st.header("🔍 Vérifications & Entretien")
+        st.header("🔍 Vérifications")
         init_state("verif_q1"); init_state("verif_q2"); init_state("verif_q3"); init_state("verif_q4"); init_state("verif_q5")
         st.markdown("---")
 
-        st.subheader("1. VGP")
-        st.write("📅 **« VGP tous les 6 mois ? »**")
+        st.subheader("1. VGP tous les 6 mois ?")
         c1, c2 = st.columns(2)
         if c1.button("VRAI", key="vf1_v") or st.session_state.verif_q1:
             st.session_state.verif_q1 = True
-            st.success("✅ VRAI (Obligatoire)")
+            st.success("✅ VRAI")
         if c2.button("FAUX", key="vf1_f"): st.error("❌ Erreur")
         st.markdown("---")
 
-        st.subheader("2. Carnet d'entretien")
-        st.write("📘 **« Je consulte le carnet d'entretien 1 fois par semaine ? »**")
+        st.subheader("2. Carnet entretien hebdo ?")
         c3, c4 = st.columns(2)
-        if c3.button("VRAI", key="vf2_v"): st.error("❌ FAUX.")
+        if c3.button("VRAI", key="vf2_v"): st.error("❌ FAUX")
         if c4.button("FAUX", key="vf2_f") or st.session_state.verif_q2:
             st.session_state.verif_q2 = True
             st.success("✅ FAUX (Quotidien)")
         st.markdown("---")
 
-        st.subheader("3. Niveau Électrolyte")
-        st.write("🔋 **« Contrôle niveau d'eau à chaque poste ? »**")
+        st.subheader("3. Niveau eau à chaque poste ?")
         c5, c6 = st.columns(2)
-        if c5.button("VRAI", key="vf3_v"): st.error("❌ FAUX.")
+        if c5.button("VRAI", key="vf3_v"): st.error("❌ FAUX")
         if c6.button("FAUX", key="vf3_f") or st.session_state.verif_q3:
             st.session_state.verif_q3 = True
-            st.success("✅ FAUX (Hebdomadaire)")
+            st.success("✅ FAUX (Hebdo)")
         st.markdown("---")
 
-        st.subheader("4. Recharge Batterie")
-        st.write("🚬 **« Fumer en chargeant si aéré ? »**")
-        c7, c8 = st.columns(2)
-        if c7.button("VRAI", key="vf4_v"): st.error("💥 DANGER !")
-        if c8.button("FAUX", key="vf4_f") or st.session_state.verif_q4:
-            st.session_state.verif_q4 = True
-            st.success("✅ FAUX")
-        st.markdown("---")
-
-        st.subheader("5. Panne")
-        st.write("🛑 **« Attendre fin de poste pour signaler panne ? »**")
-        c9, c10 = st.columns(2)
-        if c9.button("VRAI", key="vf5_v"): st.error("❌ NON !")
-        if c10.button("FAUX", key="vf5_f") or st.session_state.verif_q5:
-            st.session_state.verif_q5 = True
-            st.success("✅ FAUX (Arrêt immédiat)")
-
-    # --- MODULE 11 : GERBAGE ---
-    elif menu_485 == "11. Gerbage (Vrai/Faux)":
-        st.header("📦 Gerbage & Chargement")
-        init_state("gerb_q1"); init_state("gerb_q2"); init_state("gerb_q3"); init_state("gerb_q4"); init_state("gerb_q5")
-        st.markdown("---")
-
-        st.subheader("1. Stabilité Pile")
-        st.write("📦 **« Le plus lourd EN BAS. »**")
-        c1, c2 = st.columns(2)
-        if c1.button("VRAI", key="gb1_v") or st.session_state.gerb_q1:
-            st.session_state.gerb_q1 = True
-            st.success("✅ VRAI")
-        if c2.button("FAUX", key="gb1_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("2. Contrôle Palettier")
-        st.write("👀 **« PAS au conducteur de vérifier l'état ? »**")
-        c3, c4 = st.columns(2)
-        if c3.button("VRAI", key="gb2_v"): st.error("❌ FAUX ! Responsabilité cariste.")
-        if c4.button("FAUX", key="gb2_f") or st.session_state.gerb_q2:
-            st.session_state.gerb_q2 = True
-            st.success("✅ FAUX")
-        st.markdown("---")
-
-        st.subheader("3. Poids")
-        st.write("⚖️ **« Connaître le poids AVANT. »**")
-        c5, c6 = st.columns(2)
-        if c5.button("VRAI", key="gb3_v") or st.session_state.gerb_q3:
-            st.session_state.gerb_q3 = True
-            st.success("✅ VRAI")
-        if c6.button("FAUX", key="gb3_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("4. Pont de liaison")
-        st.write("🚚 **« Vérifier capacité du pont ? »**")
-        c7, c8 = st.columns(2)
-        if c7.button("VRAI", key="gb4_v") or st.session_state.gerb_q4:
-            st.session_state.gerb_q4 = True
-            st.success("✅ VRAI")
-        if c8.button("FAUX", key="gb4_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("5. Capacité Palettier")
-        st.write("🏗️ **« Contrôler capacité avant de poser. »**")
-        c9, c10 = st.columns(2)
-        if c9.button("VRAI", key="gb5_v") or st.session_state.gerb_q5:
-            st.session_state.gerb_q5 = True
-            st.success("✅ VRAI")
-        if c10.button("FAUX", key="gb5_f"): st.error("❌ Erreur")
-
-    # --- MODULE 12 : CIRCULATION ---
-    elif menu_485 == "12. Circulation (Vrai/Faux)":
-        st.header("🚦 Règles de Circulation")
-        init_state("circ_q1"); init_state("circ_q2"); init_state("circ_q3"); init_state("circ_q4"); init_state("circ_q5")
-        st.markdown("---")
-
-        st.subheader("1. Charge en hauteur")
-        st.write("📦 **« Je ne dois pas circuler avec une charge en hauteur. »**")
-        c1, c2 = st.columns(2)
-        if c1.button("VRAI", key="cr1_v") or st.session_state.circ_q1:
-            st.session_state.circ_q1 = True
-            st.success("✅ VRAI")
-        if c2.button("FAUX", key="cr1_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("2. Transport de personnes")
-        st.write("👥 **« Autorisé si le chef demande ? »**")
-        c3, c4 = st.columns(2)
-        if c3.button("VRAI", key="cr2_v"): st.error("❌ FAUX !")
-        if c4.button("FAUX", key="cr2_f") or st.session_state.circ_q2:
-            st.session_state.circ_q2 = True
-            st.success("✅ FAUX")
-        st.markdown("---")
-
-        st.subheader("3. Arrêt temporaire")
-        st.write("🛑 **« Arrêt = Fourches au sol ? »**")
-        c5, c6 = st.columns(2)
-        if c5.button("VRAI", key="cr3_v") or st.session_state.circ_q3:
-            st.session_state.circ_q3 = True
-            st.success("✅ VRAI")
-        if c6.button("FAUX", key="cr3_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("4. Téléphone")
-        st.write("📱 **« Autorisé si je roule lentement ? »**")
-        c7, c8 = st.columns(2)
-        if c7.button("VRAI", key="cr4_v"): st.error("❌ NON !")
-        if c8.button("FAUX", key="cr4_f") or st.session_state.circ_q4:
-            st.session_state.circ_q4 = True
-            st.success("✅ FAUX")
-        st.markdown("---")
-
-        st.subheader("5. Distance")
-        st.write("↔️ **« Distance = 3 gerbeurs ? »**")
-        c9, c10 = st.columns(2)
-        if c9.button("VRAI", key="cr5_v") or st.session_state.circ_q5:
-            st.session_state.circ_q5 = True
-            st.success("✅ VRAI")
-        if c10.button("FAUX", key="cr5_f"): st.error("❌ Erreur")
-
-    # --- MODULE 13 : PICTOGRAMMES (NOUVEAU) ---
-    elif menu_485 == "13. Pictogrammes (Auto-Test)":
-        st.header("🛑 Pictogrammes & Panneaux")
-        st.write("Regardez le document ci-dessous et trouvez la bonne correspondance.")
-        
-        try: st.image("quizz_pictogrammes.png", use_column_width=True)
-        except: st.error("⚠️ Manque l'image 'quizz_pictogrammes.png'")
-        
-        for i in range(1, 11): init_state(f"pic_q{i}")
-        st.markdown("---")
-
-        st.subheader("PARTIE 1 : Étiquettes")
-        
-        # Q1
-        st.write("☠️ **1. Toxique ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("A (Croix colis)", key="p1_a"): st.error("❌ Non")
-        if c2.button("D (Tête de mort)", key="p1_d") or st.session_state.pic_q1:
-             st.session_state.pic_q1 = True
-             st.success("✅ VRAI")
-        if c3.button("C (Verre)", key="p1_c"): st.error("❌ Non")
-        st.markdown("---")
-
-        # Q2
-        st.write("🎯 **2. Centre de gravité ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("E (Cible/Rond)", key="p2_e") or st.session_state.pic_q2:
-             st.session_state.pic_q2 = True
-             st.success("✅ VRAI")
-        if c2.button("B (Gaz)", key="p2_b"): st.error("❌ Non")
-        if c3.button("A (Croix)", key="p2_a"): st.error("❌ Non")
-        st.markdown("---")
-        
-        # Q3
-        st.write("🍷 **3. Fragile ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("C (Verre)", key="p3_c") or st.session_state.pic_q3:
-             st.session_state.pic_q3 = True
-             st.success("✅ VRAI")
-        if c2.button("E (Cible)", key="p3_e"): st.error("❌ Non")
-        if c3.button("D (Tête mort)", key="p3_d"): st.error("❌ Non")
-        st.markdown("---")
-
-        # Q4
-        st.write("📦 **4. Ne pas empiler ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("A (Boîte barrée)", key="p4_a") or st.session_state.pic_q4:
-             st.session_state.pic_q4 = True
-             st.success("✅ VRAI")
-        if c2.button("B (Gaz)", key="p4_b"): st.error("❌ Non")
-        if c3.button("C (Verre)", key="p4_c"): st.error("❌ Non")
-        st.markdown("---")
-
-        # Q5
-        st.write("🧨 **5. Gaz sous pression ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("B (Bouteille gaz)", key="p5_b") or st.session_state.pic_q5:
-             st.session_state.pic_q5 = True
-             st.success("✅ VRAI")
-        if c2.button("A (Boîte)", key="p5_a"): st.error("❌ Non")
-        if c3.button("E (Cible)", key="p5_e"): st.error("❌ Non")
-        st.markdown("---")
-
-        st.subheader("PARTIE 2 : Panneaux")
-
-        # Q6
-        st.write("🚜 **1. Interdit aux chariots ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("D (Rond rouge chariot)", key="p6_d") or st.session_state.pic_q6:
-             st.session_state.pic_q6 = True
-             st.success("✅ VRAI")
-        if c2.button("C (30)", key="p6_c"): st.error("❌ Non")
-        if c3.button("A (Piéton)", key="p6_a"): st.error("❌ Non")
-        st.markdown("---")
-
-        # Q7
-        st.write("🚶 **2. Passage Piétons Obligatoire ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("A (Rond bleu piéton)", key="p7_a") or st.session_state.pic_q7:
-             st.session_state.pic_q7 = True
-             st.success("✅ VRAI")
-        if c2.button("D (Interdit)", key="p7_d"): st.error("❌ Non")
-        if c3.button("E (Secours)", key="p7_e"): st.error("❌ Non")
-        st.markdown("---")
-
-        # Q8
-        st.write("⚡ **3. Vitesse minimale ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("C (Rond bleu 30)", key="p8_c") or st.session_state.pic_q8:
-             st.session_state.pic_q8 = True
-             st.success("✅ VRAI")
-        if c2.button("B (Incendie)", key="p8_b"): st.error("❌ Non")
-        if c3.button("A (Piéton)", key="p8_a"): st.error("❌ Non")
-        st.markdown("---")
-
-        # Q9
-        st.write("💚 **4. Premiers secours ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("E (Croix verte)", key="p9_e") or st.session_state.pic_q9:
-             st.session_state.pic_q9 = True
-             st.success("✅ VRAI")
-        if c2.button("D (Interdit)", key="p9_d"): st.error("❌ Non")
-        if c3.button("B (Incendie)", key="p9_b"): st.error("❌ Non")
-        st.markdown("---")
-
-        # Q10
-        st.write("🔥 **5. Lance à incendie ?**")
-        c1, c2, c3 = st.columns(3)
-        if c1.button("B (Carré rouge)", key="p10_b") or st.session_state.pic_q10:
-             st.session_state.pic_q10 = True
-             st.success("✅ VRAI")
-        if c2.button("C (30)", key="p10_c"): st.error("❌ Non")
-        if c3.button("E (Secours)", key="p10_e"): st.error("❌ Non")
-
-# ==============================================================================
-# AUTRES LIVRETS
-# ==============================================================================
-else:
-    st.title(f"🚧 {livret}")
-    st.info("Module en construction.")
+        st.subheader("4. Fumer en chargeant ?")
+        c7, c8 = st.columns(
