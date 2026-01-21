@@ -41,17 +41,9 @@ st.sidebar.markdown("---")
 # ZONE R.485 (GERBEURS)
 # ==============================================================================
 if livret == "CACES R.485 (Gerbeurs)":
-    
-    # LISTE DES MODULES (Mise à jour avec 7 modules)
-    menu_485 = st.sidebar.radio("Modules R.485 :", 
-        ["Accueil R.485", 
-         "1. Catégories (p.12)", 
-         "2. Technique (p.23)", 
-         "3. Stabilité (p.34)", 
-         "4. Conduite (p.54)", 
-         "5. Signalisation (p.58)", 
-         "6. Organes (Auto-Test)", 
-         "7. Acteurs (Auto-Test)"])
+    menu_485 = st.sidebar.radio("Modules R.485 :",
+        ["Accueil R.485", "1. Catégories (p.12)", "2. Technique (p.23)", 
+         "3. Stabilité (p.34)", "4. Conduite (p.54)", "5. Signalisation (p.58)"])
 
     # --- ACCUEIL ---
     if menu_485 == "Accueil R.485":
@@ -66,7 +58,7 @@ if livret == "CACES R.485 (Gerbeurs)":
 
         col1, col2 = st.columns(2)
         with col1:
-            st.warning("🖼️ [IMAGE GERBEUR JAUNE]") 
+            st.warning("🖼️ [IMAGE GERBEUR JAUNE]") # Remplacer par st.image("votre_image.jpg")
             if st.button("Est-ce un R.485 ? (1)") or st.session_state.cat_q1:
                 st.session_state.cat_q1 = True
                 st.success("✅ OUI (Catégorie 1 ou 2)")
@@ -90,26 +82,44 @@ if livret == "CACES R.485 (Gerbeurs)":
     # --- MODULE 2 : TECHNIQUE ---
     elif menu_485 == "2. Technique (p.23)":
         st.header("⚡ Technique & Batteries")
+        
+        # --- Question 1 ---
         init_state("tech_bat")
-        st.write("❓ **Question : Peut-on fumer en chargeant une batterie Plomb Ouvert ?**")
+        st.write("❓ **Question 1 : Peut-on fumer en chargeant une batterie Plomb Ouvert ?**")
         c1, c2 = st.columns(2)
         if c1.button("OUI (si fenêtre ouverte)"): st.error("💥 BOUM ! Explosion.")
         if c2.button("NON (Jamais)") or st.session_state.tech_bat:
             st.session_state.tech_bat = True
             st.success("✅ BRAVO. Interdiction formelle.")
 
+        st.markdown("---")
+
+        # --- Question 2 ---
+        init_state("tech_epi")
+        st.write("❓ **Question 2 : Quels EPI sont essentiels pour la maintenance d'une batterie ?**")
+        if st.button("Gants et lunettes de protection", key="tech_q2_a") or st.session_state.tech_epi:
+            st.session_state.tech_epi = True
+            st.success("✅ CORRECT. Il faut se protéger contre les projections d'acide.")
+        if st.button("Chaussures de sécurité uniquement", key="tech_q2_b"):
+            st.error("❌ INCOMPLET. Les mains et les yeux sont les plus exposés.")
+        if st.button("Un casque de chantier", key="tech_q2_c"):
+            st.error("❌ FAUX. Le risque principal n'est pas la chute d'objets.")
+
     # --- MODULE 3 : STABILITÉ (VERSION PLAQUES [3,1]) ---
     elif menu_485 == "3. Stabilité (p.34)":
         st.header("⚖️ Exercice : Plaques de Charge")
         st.write("Analysez les documents pour répondre (Réponses p.59).")
+        
+        # Initialisation des mémoires
         init_state("plaque_q1"); init_state("plaque_q2"); init_state("plaque_q3"); init_state("plaque_q4")
+
         st.markdown("---")
 
-        # BLOC 1
+        # BLOC 1 : TABLEAU DU HAUT
         col_img1, col_txt1 = st.columns([3, 1])
         with col_img1:
             try: st.image("quizz_plaque_de_charge_gerbeur_haut.png", use_column_width=True)
-            except: st.error("⚠️ Manque: quizz_plaque_de_charge_gerbeur_haut.png")
+            except: st.error("⚠️ Image 'quizz_plaque_de_charge_gerbeur_haut.png' manquante.")
         with col_txt1:
             st.markdown("#### 1. Hauteur max ?")
             st.write("Pour **630 kg** (L=1200mm) :")
@@ -117,7 +127,7 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.session_state.plaque_q1 = True
                 st.success("✅ 4000 mm")
             if st.button("4300 mm", key="btn_q1_b"):
-                st.error("❌ Non")
+                st.error("❌ Non (Max 550kg)")
             st.write("---")
             st.markdown("#### 2. Poids max ?")
             st.write("À **4300 mm** (Charge longue) :")
@@ -128,11 +138,11 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.error("❌ Non")
         st.markdown("---")
 
-        # BLOC 2
+        # BLOC 2 : GRAPHIQUE DU MILIEU
         col_img2, col_txt2 = st.columns([3, 1])
         with col_img2:
             try: st.image("quizz_plaque_de_charge_gerbeur_milieu.png", use_column_width=True)
-            except: st.error("⚠️ Manque: quizz_plaque_de_charge_gerbeur_milieu.png")
+            except: st.error("⚠️ Image 'quizz_plaque_de_charge_gerbeur_milieu.png' manquante.")
         with col_txt2:
             st.markdown("#### 3. Graphique")
             st.write("**1400 kg** à **400 mm**. Hauteur ?")
@@ -140,14 +150,14 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.session_state.plaque_q3 = True
                 st.success("✅ 3884 mm")
             if st.button("4224 mm", key="btn_q3_b"):
-                st.error("❌ Trop haut")
+                st.error("❌ Trop haut !")
         st.markdown("---")
 
-        # BLOC 3
+        # BLOC 3 : PLAQUE DU BAS
         col_img3, col_txt3 = st.columns([3, 1])
         with col_img3:
             try: st.image("quizz_plaque_de_charge_gerbeur_bas.png", use_column_width=True)
-            except: st.error("⚠️ Manque: quizz_plaque_de_charge_gerbeur_bas.png")
+            except: st.error("⚠️ Image 'quizz_plaque_de_charge_gerbeur_bas.png' manquante.")
         with col_txt3:
             st.markdown("#### 4. Constructeur")
             st.write("Je peux déplacer :")
@@ -155,57 +165,42 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.session_state.plaque_q4 = True
                 st.success("✅ EXACT")
             if st.button("1556kg à 300mm", key="btn_q4_b"):
-                st.error("❌ Non")
+                st.error("❌ Non (Poids à vide)")
 
-    # --- MODULE 4 : CONDUITE ---
+# --- MODULE 4 : CONDUITE ---
     elif menu_485 == "4. Conduite (p.54)":
         st.header("🚦 Règles de Conduite")
-        init_state("cond_q1"); init_state("cond_q2")
         
-        st.write("**1. Distance de sécurité entre 2 gerbeurs ?**")
-        c1, c2 = st.columns(2)
-        if c1.button("1 mètre"): st.error("❌ Trop près !")
-        if c2.button("3 gerbeurs") or st.session_state.cond_q1:
-            st.session_state.cond_q1 = True
-            st.success("✅ CORRECT")
-        
-        st.markdown("---")
-        
-        st.write("**2. Dans une pente, la charge doit être...**")
-        c3, c4 = st.columns(2)
-        if c3.button("Vers le bas (Aval)"): st.error("❌ DANGER !")
-        if c4.button("Vers l'AMONT (Haut)") or st.session_state.cond_q2:
-            st.session_state.cond_q2 = True
-            st.success("✅ CORRECT")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("**1. Distance de sécurité entre 2 gerbeurs ?**")
+            if st.button("1 mètre"): st.error("❌ Trop près !")
+            if st.button("3 gerbeurs"): st.success("✅ CORRECT (env. 3 à 5m)")
+            
+        with col2:
+            st.write("**2. Dans une pente, la charge doit être...**")
+            if st.button("Vers le bas (Aval)"): st.error("❌ La charge risque de glisser !")
+            if st.button("Vers le haut (Amont)"): st.success("✅ CORRECT (Pour la plaquer au dosseret)")
 
     # --- MODULE 5 : SIGNALISATION ---
     elif menu_485 == "5. Signalisation (p.58)":
         st.header("🚧 Panneaux")
-        st.write("Cliquez pour révéler la signification.")
-        init_state("sig_tox"); init_state("sig_epi")
+        st.write("Reliez le panneau à sa signification.")
         
         c1, c2 = st.columns(2)
         with c1:
             st.write("☠️ **Tête de Mort**")
-            if st.button("Révéler ##1") or st.session_state.sig_tox:
-                st.session_state.sig_tox = True
-                st.success("✅ TOXIQUE")
+            if st.button("Toxique"): st.success("✅ VRAI")
+            if st.button("Mortel"): st.warning("⚠️ C'est 'Toxique' le terme exact.")
+            
         with c2:
             st.write("🔵 **Rond Bleu (Chaussure)**")
-            if st.button("Révéler ##2") or st.session_state.sig_epi:
-                st.session_state.sig_epi = True
-                st.success("✅ OBLIGATION EPI")
+            if st.button("Conseillé"): st.error("❌ Bleu = OBLIGATION")
+            if st.button("Obligatoire"): st.success("✅ VRAI (EPI)")
 
-    # --- MODULE 6 : ORGANES (NOUVEAU) ---
-    elif menu_485 == "6. Organes (Auto-Test)":
-        st.header("🔧 Identification des Organes")
-        init_state("org_q1"); init_state("org_q2"); init_state("org_q3"); init_state("org_q4"); init_state("org_q5")
-
-        st.markdown("---")
-        # IMAGE 1
-        col1, col2 = st.columns([1, 2])
-        with col1:
-            try: st.image("Image1.png", use_column_width=True)
-            except: st.error("Manque Image1.png")
-        with col2:
-            st.markdown("#### 1. Quel est cet élément ?
+# ==============================================================================
+# AUTRES LIVRETS
+# ==============================================================================
+else:
+    st.title(f"🚧 {livret}")
+    st.info("Module en construction.")
