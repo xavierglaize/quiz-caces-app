@@ -1,5 +1,6 @@
 import streamlit as st
 from PIL import Image
+import random  # <--- AJOUTER CETTE LIGNE
 
 # --- CONFIGURATION GÉNÉRALE ---
 st.set_page_config(page_title="Hub Formation CACES", layout="centered", page_icon="🏗️")
@@ -45,6 +46,7 @@ if livret == "CACES R.485 (Gerbeurs)":
     # LISTE DES MODULES (Mise à jour avec 13 modules)
     menu_485 = st.sidebar.radio("Modules R.485 :", 
         ["Accueil R.485", 
+         "0. Tronc Commun (Aléatoire)", 
          "1. Catégories (p.12)", 
          "2. Technique (p.23)", 
          "3. Stabilité (p.34)", 
@@ -64,6 +66,78 @@ if livret == "CACES R.485 (Gerbeurs)":
         st.title("🏗️ Formation Gerbeurs R.485")
         st.info("Bienvenue. Ce module utilise la méthode de la **Photo Mentale**.")
         st.write("Les réponses correctes resteront affichées pour faciliter votre mémorisation.")
+        # --- MODULE TRONC COMMUN (ALÉATOIRE) ---
+    elif menu_485 == "0. Tronc Commun (Aléatoire)":
+        st.header("🎲 Tronc Commun - Test Aléatoire")
+        st.write("Ce module pioche 3 questions au hasard dans la banque de données commune.")
+        
+        # --- ETAPE 1 : LA BANQUE DE QUESTIONS (TRONC COMMUN) ---
+        # On peut en mettre 50 ici, ça ne prend pas de place !
+        banque_questions = [
+            {
+                "question": "Quelle est la distance de sécurité entre deux chariots ?",
+                "options": ["1 mètre", "3 longueurs de chariot", "10 mètres"],
+                "reponse": "3 longueurs de chariot",
+                "explication": "Règle de base pour éviter les collisions."
+            },
+            {
+                "question": "Qui délivre l'autorisation de conduite ?",
+                "options": ["Le formateur", "La médecine du travail", "L'employeur"],
+                "reponse": "L'employeur",
+                "explication": "Le CACES est délivré par le testeur, mais l'autorisation est signée par le chef d'entreprise."
+            },
+            {
+                "question": "En cas de fuite d'acide sur la batterie, je rince avec :",
+                "options": ["De l'eau", "Du sable", "Un chiffon sec"],
+                "reponse": "De l'eau",
+                "explication": "L'eau dilue l'acide. Attention aux yeux !"
+            },
+            {
+                "question": "Le CACES est valable :",
+                "options": ["1 an", "5 ans", "10 ans"],
+                "reponse": "5 ans",
+                "explication": "À renouveler tous les 5 ans."
+            },
+            {
+                "question": "Quelle est la principale cause de renversement ?",
+                "options": ["Vitesse excessive en virage", "Panne de batterie", "Klaxon défectueux"],
+                "reponse": "Vitesse excessive en virage",
+                "explication": "La force centrifuge déstabilise le chariot."
+            }
+        ]
+
+        # --- ETAPE 2 : LE TIRAGE AU SORT (MÉMOIRE) ---
+        # On vérifie si on a déjà tiré des questions, sinon on le fait
+        if "questions_du_jour" not in st.session_state:
+            # On pioche 3 questions au hasard
+            st.session_state.questions_du_jour = random.sample(banque_questions, 3)
+            # On initialise les réponses utilisateur
+            st.session_state.reponses_user = {}
+
+        # Bouton pour tout changer
+        if st.button("🔄 Générer une nouvelle série de questions"):
+            st.session_state.questions_du_jour = random.sample(banque_questions, 3)
+            st.session_state.reponses_user = {} # Reset des réponses
+            st.rerun()
+
+        st.markdown("---")
+
+        # --- ETAPE 3 : L'AFFICHAGE DYNAMIQUE ---
+        # On boucle sur les 3 questions piochées
+        for i, q in enumerate(st.session_state.questions_du_jour):
+            st.subheader(f"Question {i+1}")
+            st.write(f"**{q['question']}**")
+            
+            # On crée une clé unique pour chaque question
+            choix = st.radio(f"Votre réponse (Q{i+1}) :", q['options'], key=f"radio_{i}", index=None)
+            
+            if choix:
+                if choix == q['reponse']:
+                    st.success(f"✅ BRAVO ! {q['explication']}")
+                else:
+                    st.error(f"❌ FAUX. La bonne réponse était : {q['reponse']}")
+            
+            st.markdown("---")
 
     # --- MODULE 1 : CATÉGORIES ---
     elif menu_485 == "1. Catégories (p.12)":
