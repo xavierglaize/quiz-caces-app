@@ -42,9 +42,9 @@ st.sidebar.markdown("---")
 # ==============================================================================
 if livret == "CACES R.485 (Gerbeurs)":
     
-    menu_485 = st.sidebar.radio("Modules R.485 :", 
+   menu_485 = st.sidebar.radio("Modules R.485 :", 
         ["Accueil R.485", "1. Catégories (p.12)", "2. Technique (p.23)", 
-         "3. Stabilité (p.34)", "4. Conduite (p.54)", "5. Signalisation (p.58)"])
+         "3. Stabilité (p.34)", "4. Conduite (p.54)", "5. Signalisation (p.58)", "6. Organes (Auto-Test)"])
 
     # --- ACCUEIL ---
     if menu_485 == "Accueil R.485":
@@ -183,7 +183,98 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.write("🔵 **Rond Bleu (Chaussure)**")
             if st.button("Conseillé"): st.error("❌ Bleu = OBLIGATION")
             if st.button("Obligatoire"): st.success("✅ VRAI (EPI)")
+    # --- MODULE 6 : ORGANES & COMMANDES (NOUVEAU) ---
+    elif menu_485 == "6. Organes (Auto-Test)":
+        st.header("🔧 Identification des Organes")
+        st.write("Reliez la photo à la bonne définition.")
+        
+        # Initialisation des mémoires
+        init_state("org_q1"); init_state("org_q2"); init_state("org_q3"); init_state("org_q4"); init_state("org_q5")
 
+        st.markdown("---")
+
+        # --- IMAGE 1 (Anti-écrasement) ---
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            try: st.image("Image1.png", use_column_width=True)
+            except: st.error("Manque Image1.png")
+        with col2:
+            st.markdown("#### 1. Quel est cet élément ?")
+            if st.button("Dispositif de condamnation", key="btn_o1_a"):
+                st.error("❌ Non. Ça c'est la clé ou le digicode.")
+            if st.button("Commande anti-écrasement", key="btn_o1_b") or st.session_state.org_q1:
+                st.session_state.org_q1 = True
+                st.success("✅ EXACT (Sécurité ventrale)")
+            if st.button("Avertisseur sonore", key="btn_o1_c"):
+                st.error("❌ Non. C'est le bouton rouge au bout.")
+
+        st.markdown("---")
+
+        # --- IMAGE 2 (Digicode) ---
+        col3, col4 = st.columns([1, 2])
+        with col3:
+            try: st.image("Image2.png", use_column_width=True)
+            except: st.error("Manque Image2.png")
+        with col4:
+            st.markdown("#### 2. Quel est cet élément ?")
+            if st.button("Dispositif de condamnation", key="btn_o2_a") or st.session_state.org_q2:
+                st.session_state.org_q2 = True
+                st.success("✅ EXACT (Empêche l'utilisation non autorisée)")
+            if st.button("Sélecteur de programme", key="btn_o2_b"):
+                st.error("❌ Non.")
+            if st.button("Indicateur de décharge", key="btn_o2_c"):
+                st.error("❌ Non.")
+
+        st.markdown("---")
+
+        # --- IMAGE 3 (Roue Stabilisatrice) ---
+        col5, col6 = st.columns([1, 2])
+        with col5:
+            try: st.image("Image3.png", use_column_width=True)
+            except: st.error("Manque Image3.png")
+        with col6:
+            st.markdown("#### 3. Quel est cet élément ?")
+            if st.button("Roue directrice", key="btn_o3_a"):
+                st.error("❌ Non, la directrice est plus grosse et au milieu.")
+            if st.button("Galet porteur", key="btn_o3_b"):
+                st.error("❌ Non, les galets sont sous les fourches.")
+            if st.button("Roue stabilisatrice", key="btn_o3_c") or st.session_state.org_q3:
+                st.session_state.org_q3 = True
+                st.success("✅ EXACT (Pour la stabilité latérale)")
+
+        st.markdown("---")
+
+        # --- IMAGE 4 (Vitesse Lente / Tortue) ---
+        col7, col8 = st.columns([1, 2])
+        with col7:
+            try: st.image("Image4.png", use_column_width=True)
+            except: st.error("Manque Image4.png")
+        with col8:
+            st.markdown("#### 4. À quoi sert ce bouton ?")
+            if st.button("Commande vitesse lente", key="btn_o4_a") or st.session_state.org_q4:
+                st.session_state.org_q4 = True
+                st.success("✅ EXACT (Mode Tortue : Timon vertical)")
+            if st.button("Klaxon", key="btn_o4_b"):
+                st.error("❌ Non.")
+            if st.button("Levée des fourches", key="btn_o4_c"):
+                st.error("❌ Non.")
+
+        st.markdown("---")
+
+        # --- IMAGE 5 (Roue Directrice) ---
+        col9, col10 = st.columns([1, 2])
+        with col9:
+            try: st.image("Image5.png", use_column_width=True)
+            except: st.error("Manque Image5.png")
+        with col10:
+            st.markdown("#### 5. Quel est cet élément ?")
+            if st.button("Roue directrice", key="btn_o5_a") or st.session_state.org_q5:
+                st.session_state.org_q5 = True
+                st.success("✅ EXACT (Elle dirige et transmet la puissance)")
+            if st.button("Roue stabilisatrice", key="btn_o5_b"):
+                st.error("❌ Non, c'est la petite sur le côté.")
+            if st.button("Roue libre", key="btn_o5_c"):
+                st.error("❌ Non.")
 # ==============================================================================
 # AUTRES LIVRETS
 # ==============================================================================
