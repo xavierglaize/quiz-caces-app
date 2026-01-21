@@ -44,7 +44,8 @@ if livret == "CACES R.485 (Gerbeurs)":
     
    menu_485 = st.sidebar.radio("Modules R.485 :", 
         ["Accueil R.485", "1. Catégories (p.12)", "2. Technique (p.23)", 
-         "3. Stabilité (p.34)", "4. Conduite (p.54)", "5. Signalisation (p.58)", "6. Organes (Auto-Test)"])
+         "3. Stabilité (p.34)", "4. Conduite (p.54)", "5. Signalisation (p.58)", 
+         "6. Organes (Auto-Test)", "7. Acteurs (Auto-Test)"])
 
     # --- ACCUEIL ---
     if menu_485 == "Accueil R.485":
@@ -275,6 +276,105 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.error("❌ Non, c'est la petite sur le côté.")
             if st.button("Roue libre", key="btn_o5_c"):
                 st.error("❌ Non.")
+
+# --- MODULE 7 : ACTEURS DE LA PRÉVENTION (NOUVEAU) ---
+    elif menu_485 == "7. Acteurs (Auto-Test)":
+        st.header("🤝 Les Acteurs de la Prévention")
+        st.write("Qui fait quoi ? Retrouvez le bon interlocuteur.")
+        
+        # Initialisation des mémoires
+        init_state("act_q1"); init_state("act_q2"); init_state("act_q3"); init_state("act_q4"); init_state("act_q5")
+
+        st.markdown("---")
+
+        # --- QUESTION 1 : INSPECTEUR ---
+        st.subheader("1. Droit d'entrée")
+        st.write("**« Il peut pénétrer sur tout site où se trouvent des salariés. »**")
+        
+        c1, c2 = st.columns([2, 1])
+        with c1:
+            st.write("Qui est-ce ?")
+            if st.button("La CARSAT", key="btn_a1_a"):
+                st.error("❌ Non, la CARSAT s'occupe de prévention/tarification.")
+            if st.button("L'Inspecteur du Travail", key="btn_a1_b") or st.session_state.act_q1:
+                st.session_state.act_q1 = True
+                st.success("✅ EXACT")
+                # On affiche l'image en récompense
+                try: st.image("Acteur_Inspecteur.png", width=150)
+                except: st.write("Image manquante")
+            if st.button("Le Fabricant", key="btn_a1_c"):
+                st.error("❌ Non.")
+
+        st.markdown("---")
+
+        # --- QUESTION 2 : FABRICANT ---
+        st.subheader("2. Conformité Machine")
+        st.write("**« Il est responsable du marquage CE sur le gerbeur. »**")
+        
+        c3, c4 = st.columns([2, 1])
+        with c3:
+            st.write("Qui est-ce ?")
+            if st.button("Le Chef d'équipe", key="btn_a2_a"):
+                st.error("❌ Non.")
+            if st.button("Le Fabricant", key="btn_a2_b") or st.session_state.act_q2:
+                st.session_state.act_q2 = True
+                st.success("✅ EXACT (Conception & Marquage)")
+                try: st.image("Acteur_Fabricant.png", width=150)
+                except: st.write("Image manquante")
+            if st.button("L'Inspecteur", key="btn_a2_c"):
+                st.error("❌ Non.")
+
+        st.markdown("---")
+
+        # --- QUESTION 3 : CARSAT ---
+        st.subheader("3. Organisme Majeur")
+        st.write("**« C'est un organisme majeur de la prévention en France (Assurance Maladie). »**")
+        
+        c5, c6 = st.columns([2, 1])
+        with c5:
+            st.write("Qui est-ce ?")
+            if st.button("Le CSE", key="btn_a3_a"):
+                st.error("❌ Non, le CSE est interne à l'entreprise.")
+            if st.button("La CARSAT", key="btn_a3_b") or st.session_state.act_q3:
+                st.session_state.act_q3 = True
+                st.success("✅ EXACT")
+                try: st.image("Acteur_CARSAT.png", width=150)
+                except: st.write("Image manquante")
+        
+        st.markdown("---")
+
+        # --- QUESTION 4 : CSE ---
+        st.subheader("4. Enquêtes")
+        st.write("**« Il réalise des enquêtes suite à un accident. »**")
+        
+        c7, c8 = st.columns([2, 1])
+        with c7:
+            st.write("Qui est-ce ?")
+            if st.button("Le CSE / CSSCT", key="btn_a4_a") or st.session_state.act_q4:
+                st.session_state.act_q4 = True
+                st.success("✅ EXACT (Représentants du personnel)")
+                try: st.image("Acteur_CSE.png", width=150)
+                except: st.write("Image manquante")
+            if st.button("La Médecine du travail", key="btn_a4_b"):
+                st.error("❌ Non.")
+
+        st.markdown("---")
+
+        # --- QUESTION 5 : PERSONNEL ---
+        st.subheader("5. Responsabilité")
+        st.write("**« Il est responsable de la sécurité au sein de l'entreprise. »**")
+        
+        c9, c10 = st.columns([2, 1])
+        with c9:
+            st.write("Qui est-ce ?")
+            if st.button("Le Fabricant", key="btn_a5_a"):
+                st.error("❌ Non.")
+            if st.button("L'ensemble du personnel", key="btn_a5_b") or st.session_state.act_q5:
+                st.session_state.act_q5 = True
+                st.success("✅ EXACT")
+                st.info("💡 Note : L'employeur porte la responsabilité pénale, mais **chacun** est acteur de sa propre sécurité (Art. L4122-1).")
+                try: st.image("Acteur_Personnel.png", width=150)
+                except: st.write("Image manquante")
 # ==============================================================================
 # AUTRES LIVRETS
 # ==============================================================================
