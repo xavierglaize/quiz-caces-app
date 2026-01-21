@@ -43,19 +43,19 @@ st.sidebar.markdown("---")
 # ==============================================================================
 if livret == "CACES R.485 (Gerbeurs)":
     
-    # LISTE COMPLETE (TRONC COMMUN + 13 MODULES)
+    # LISTE COMPLETE (TRONC COMMUN + 13 MODULES) - ORDRE CORRIGÉ
     menu_485 = st.sidebar.radio("Modules R.485 :", 
         ["Accueil R.485", 
          "0. Tronc Commun (Aléatoire)",
-         "1. Catégories (p.12)", 
-         "2. Technique (p.23)", 
-         "3. Stabilité (p.34)", 
-         "4. Conduite (p.54)", 
-         "5. Signalisation (p.58)", 
-         "6. Organes (Auto-Test)", 
-         "7. Acteurs (Auto-Test)",
-         "8. Causes Accidents (Auto-Test)",
-         "9. Réglementation (Vrai/Faux)",
+         "1. Réglementation (Vrai/Faux)",
+         "2. Catégories (p.12)", 
+         "3. Technique (p.23)", 
+         "4. Stabilité (p.34)", 
+         "5. Conduite (p.54)", 
+         "6. Signalisation (p.58)", 
+         "7. Organes (Auto-Test)", 
+         "8. Acteurs (Auto-Test)",
+         "9. Causes Accidents (Auto-Test)",
          "10. Vérifications (Vrai/Faux)",
          "11. Gerbage (Vrai/Faux)",
          "12. Circulation (Vrai/Faux)",
@@ -72,7 +72,6 @@ if livret == "CACES R.485 (Gerbeurs)":
         st.header("🎲 Test Aléatoire (Tronc Commun)")
         st.write("Ce module pioche 3 questions au hasard dans la banque de données.")
         
-        # BANQUE DE QUESTIONS (Vous pourrez en ajouter plein ici !)
         banque_questions = [
             {
                 "question": "Quelle est la distance de sécurité entre deux chariots ?",
@@ -112,18 +111,15 @@ if livret == "CACES R.485 (Gerbeurs)":
             }
         ]
 
-        # TIRAGE AU SORT (S'il n'est pas déjà fait)
         if "questions_du_jour" not in st.session_state:
             st.session_state.questions_du_jour = random.sample(banque_questions, 3)
         
-        # BOUTON RELANCE
         if st.button("🔄 NOUVEAU TIRAGE"):
             st.session_state.questions_du_jour = random.sample(banque_questions, 3)
             st.rerun()
 
         st.markdown("---")
 
-        # AFFICHAGE DES QUESTIONS
         for i, q in enumerate(st.session_state.questions_du_jour):
             st.subheader(f"Question {i+1}")
             st.write(f"**{q['question']}**")
@@ -136,8 +132,53 @@ if livret == "CACES R.485 (Gerbeurs)":
                     st.error(f"❌ FAUX. La bonne réponse était : {q['reponse']}")
             st.markdown("---")
 
-    # --- MODULE 1 : CATÉGORIES ---
-    elif menu_485 == "1. Catégories (p.12)":
+    # --- MODULE 1 : RÉGLEMENTATION (ANCIEN MODULE 9) ---
+    elif menu_485 == "1. Réglementation (Vrai/Faux)":
+        st.header("📋 Réglementation")
+        init_state("reg_q1"); init_state("reg_q2"); init_state("reg_q3"); init_state("reg_q4"); init_state("reg_q5")
+        st.markdown("---")
+
+        st.subheader("1. Formation Obligatoire ?")
+        c1, c2 = st.columns(2)
+        if c1.button("VRAI", key="rg1_v") or st.session_state.reg_q1:
+            st.session_state.reg_q1 = True
+            st.success("✅ VRAI")
+        if c2.button("FAUX", key="rg1_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("2. Cariste responsable matériel ?")
+        c3, c4 = st.columns(2)
+        if c3.button("VRAI", key="rg2_v") or st.session_state.reg_q2:
+            st.session_state.reg_q2 = True
+            st.success("✅ VRAI")
+        if c4.button("FAUX", key="rg2_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("3. Autorisation par l'organisme ?")
+        c5, c6 = st.columns(2)
+        if c5.button("VRAI", key="rg3_v"): st.error("❌ FAUX")
+        if c6.button("FAUX", key="rg3_f") or st.session_state.reg_q3:
+            st.session_state.reg_q3 = True
+            st.success("✅ FAUX (C'est l'employeur)")
+        st.markdown("---")
+
+        st.subheader("4. 18 ans minimum ?")
+        c7, c8 = st.columns(2)
+        if c7.button("VRAI", key="rg4_v") or st.session_state.reg_q4:
+            st.session_state.reg_q4 = True
+            st.success("✅ VRAI")
+        if c8.button("FAUX", key="rg4_f"): st.error("❌ Erreur")
+        st.markdown("---")
+
+        st.subheader("5. Pas de formation pour occasionnel ?")
+        c9, c10 = st.columns(2)
+        if c9.button("VRAI", key="rg5_v"): st.error("❌ FAUX")
+        if c10.button("FAUX", key="rg5_f") or st.session_state.reg_q5:
+            st.session_state.reg_q5 = True
+            st.success("✅ FAUX")
+
+    # --- MODULE 2 : CATÉGORIES ---
+    elif menu_485 == "2. Catégories (p.12)":
         st.header("🔍 Quiz : Reconnaissance des Engins")
         init_state("cat_q1"); init_state("cat_q2"); init_state("cat_q3"); init_state("cat_q4")
 
@@ -163,8 +204,8 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.session_state.cat_q4 = True
                 st.error("❌ NON (R.489 - Porté)")
 
-    # --- MODULE 2 : TECHNIQUE ---
-    elif menu_485 == "2. Technique (p.23)":
+    # --- MODULE 3 : TECHNIQUE ---
+    elif menu_485 == "3. Technique (p.23)":
         st.header("⚡ Technique & Batteries")
         init_state("tech_bat")
         st.write("❓ **Question : Peut-on fumer en chargeant une batterie Plomb Ouvert ?**")
@@ -174,8 +215,8 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.session_state.tech_bat = True
             st.success("✅ BRAVO. Interdiction formelle.")
 
-    # --- MODULE 3 : STABILITÉ ---
-    elif menu_485 == "3. Stabilité (p.34)":
+    # --- MODULE 4 : STABILITÉ ---
+    elif menu_485 == "4. Stabilité (p.34)":
         st.header("⚖️ Exercice : Plaques de Charge")
         init_state("plaque_q1"); init_state("plaque_q2"); init_state("plaque_q3"); init_state("plaque_q4")
         st.markdown("---")
@@ -225,8 +266,8 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.success("✅ EXACT")
             if st.button("1556kg à 300mm", key="btn_q4_b"): st.error("❌ Non")
 
-    # --- MODULE 4 : CONDUITE ---
-    elif menu_485 == "4. Conduite (p.54)":
+    # --- MODULE 5 : CONDUITE ---
+    elif menu_485 == "5. Conduite (p.54)":
         st.header("🚦 Règles de Conduite")
         init_state("cond_q1"); init_state("cond_q2")
         st.write("**1. Distance de sécurité entre 2 gerbeurs ?**")
@@ -243,8 +284,8 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.session_state.cond_q2 = True
             st.success("✅ CORRECT")
 
-    # --- MODULE 5 : SIGNALISATION ---
-    elif menu_485 == "5. Signalisation (p.58)":
+    # --- MODULE 6 : SIGNALISATION ---
+    elif menu_485 == "6. Signalisation (p.58)":
         st.header("🚧 Panneaux")
         init_state("sig_tox"); init_state("sig_epi")
         c1, c2 = st.columns(2)
@@ -259,8 +300,8 @@ if livret == "CACES R.485 (Gerbeurs)":
                 st.session_state.sig_epi = True
                 st.success("✅ OBLIGATION EPI")
 
-    # --- MODULE 6 : ORGANES ---
-    elif menu_485 == "6. Organes (Auto-Test)":
+    # --- MODULE 7 : ORGANES ---
+    elif menu_485 == "7. Organes (Auto-Test)":
         st.header("🔧 Identification des Organes")
         init_state("org_q1"); init_state("org_q2"); init_state("org_q3"); init_state("org_q4"); init_state("org_q5")
         st.markdown("---")
@@ -329,8 +370,8 @@ if livret == "CACES R.485 (Gerbeurs)":
             if st.button("Roue stabilisatrice", key="btn_o5_b"): st.error("❌ Non")
             if st.button("Roue libre", key="btn_o5_c"): st.error("❌ Non")
 
-    # --- MODULE 7 : ACTEURS ---
-    elif menu_485 == "7. Acteurs (Auto-Test)":
+    # --- MODULE 8 : ACTEURS ---
+    elif menu_485 == "8. Acteurs (Auto-Test)":
         st.header("🤝 Les Acteurs")
         init_state("act_q1"); init_state("act_q2"); init_state("act_q3"); init_state("act_q4"); init_state("act_q5")
         st.markdown("---")
@@ -391,13 +432,12 @@ if livret == "CACES R.485 (Gerbeurs)":
                 try: st.image("Acteur_Personnel.png", width=150)
                 except: st.write("Manque img")
 
-    # --- MODULE 8 : CAUSES ACCIDENTS ---
-    elif menu_485 == "8. Causes Accidents (Auto-Test)":
+    # --- MODULE 9 : CAUSES ACCIDENTS ---
+    elif menu_485 == "9. Causes Accidents (Auto-Test)":
         st.header("⚠️ Causes d'accidents")
         for i in range(1, 11): init_state(f"cause_q{i}")
         st.markdown("---")
 
-        # Questions simplifiées pour gain de place code (même logique)
         q_data = [
             ("1. Mauvais positionnement bras", "Conducteur", "c1"),
             ("2. Mauvaise stabilisation", "Conducteur", "c2"),
@@ -415,80 +455,30 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.markdown(f"#### {q_text}")
             c1, c2, c3 = st.columns(3)
             
-            # Gestion logique bouton
             key_q = f"cause_q{i+1}"
             
-            # Conducteur
             if c1.button("Conducteur", key=f"btn_{i}_c"):
                 if bon_choix == "Conducteur": 
                     st.session_state[key_q] = True
                     st.success("✅ CORRECT")
                 else: st.error("❌ Non")
             
-            # Matériel
             if c2.button("Matériel", key=f"btn_{i}_m"):
                 if bon_choix == "Matériel":
                     st.session_state[key_q] = True
                     st.success("✅ CORRECT")
                 else: st.error("❌ Non")
             
-            # Environnement
             if c3.button("Environnement", key=f"btn_{i}_e"):
                 if bon_choix == "Environnement":
                     st.session_state[key_q] = True
                     st.success("✅ CORRECT")
                 else: st.error("❌ Non")
             
-            # Si déjà trouvé avant
             if st.session_state[key_q]:
                 st.success("✅ DÉJÀ TROUVÉ")
             
             st.markdown("---")
-
-    # --- MODULE 9 : RÉGLEMENTATION ---
-    elif menu_485 == "9. Réglementation (Vrai/Faux)":
-        st.header("📋 Réglementation")
-        init_state("reg_q1"); init_state("reg_q2"); init_state("reg_q3"); init_state("reg_q4"); init_state("reg_q5")
-        st.markdown("---")
-
-        st.subheader("1. Formation Obligatoire ?")
-        c1, c2 = st.columns(2)
-        if c1.button("VRAI", key="rg1_v") or st.session_state.reg_q1:
-            st.session_state.reg_q1 = True
-            st.success("✅ VRAI")
-        if c2.button("FAUX", key="rg1_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("2. Cariste responsable matériel ?")
-        c3, c4 = st.columns(2)
-        if c3.button("VRAI", key="rg2_v") or st.session_state.reg_q2:
-            st.session_state.reg_q2 = True
-            st.success("✅ VRAI")
-        if c4.button("FAUX", key="rg2_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("3. Autorisation par l'organisme ?")
-        c5, c6 = st.columns(2)
-        if c5.button("VRAI", key="rg3_v"): st.error("❌ FAUX")
-        if c6.button("FAUX", key="rg3_f") or st.session_state.reg_q3:
-            st.session_state.reg_q3 = True
-            st.success("✅ FAUX (C'est l'employeur)")
-        st.markdown("---")
-
-        st.subheader("4. 18 ans minimum ?")
-        c7, c8 = st.columns(2)
-        if c7.button("VRAI", key="rg4_v") or st.session_state.reg_q4:
-            st.session_state.reg_q4 = True
-            st.success("✅ VRAI")
-        if c8.button("FAUX", key="rg4_f"): st.error("❌ Erreur")
-        st.markdown("---")
-
-        st.subheader("5. Pas de formation pour occasionnel ?")
-        c9, c10 = st.columns(2)
-        if c9.button("VRAI", key="rg5_v"): st.error("❌ FAUX")
-        if c10.button("FAUX", key="rg5_f") or st.session_state.reg_q5:
-            st.session_state.reg_q5 = True
-            st.success("✅ FAUX")
 
     # --- MODULE 10 : VÉRIFICATIONS ---
     elif menu_485 == "10. Vérifications (Vrai/Faux)":
@@ -635,7 +625,6 @@ if livret == "CACES R.485 (Gerbeurs)":
         for i in range(1, 11): init_state(f"pic_q{i}")
         st.markdown("---")
 
-        # Questions en boucle pour gagner de la place
         quiz_data = [
             ("1. Toxique ?", "D (Tête de mort)"),
             ("2. Centre de gravité ?", "E (Cible)"),
@@ -653,18 +642,11 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.write(f"**{q_txt}**")
             k_suffix = f"p{i+1}"
             
-            # 3 choix fictifs dont la bonne réponse
-            # Pour faire simple ici, je mets 3 boutons génériques A/B/C ou D/E/F selon la question
-            # mais avec la logique : seul le bon bouton valide
-            
             c1, c2, c3 = st.columns(3)
-            # Bouton 1 (Faux)
             if c1.button("Mauvais", key=f"{k_suffix}_bad1"): st.error("❌ Non")
-            # Bouton 2 (Bon)
             if c2.button(rep, key=f"{k_suffix}_good") or st.session_state[f"pic_q{i+1}"]:
                 st.session_state[f"pic_q{i+1}"] = True
                 st.success("✅ VRAI")
-            # Bouton 3 (Faux)
             if c3.button("Autre", key=f"{k_suffix}_bad2"): st.error("❌ Non")
             st.markdown("---")
 
