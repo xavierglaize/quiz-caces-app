@@ -164,36 +164,62 @@ if livret == "CACES R.485 (Gerbeurs)":
             st.session_state.reg_q5 = True
             st.success("✅ FAUX")
 
-    # --- MODULE 2 : CATÉGORIES ---
+ # --- MODULE 2 : CATÉGORIES ---
     elif menu_485 == "2. Catégories (p.12)":
         st.header("🔍 Quiz : Reconnaissance des Engins")
         init_state("cat_q1"); init_state("cat_q2"); init_state("cat_q3"); init_state("cat_q4")
 
+        st.markdown("---")
+        st.subheader("1. Gerbeur Jaune : Est-ce un R.485 ?")
         col1, col2 = st.columns(2)
         with col1:
             try: st.image("images/Image1.png") # Gerbeur Jaune
             except: st.error("Image manquante")
-            if st.button("Est-ce un R.485 ? (1)") or st.session_state.cat_q1:
-                st.session_state.cat_q1 = True
-                st.success("✅ OUI (Catégorie 1 ou 2)")
-            st.markdown("---")
-            try: st.image("images/Image3.png") # Gerbeur Orange
-            except: st.error("Image manquante")
-            if st.button("Est-ce un R.485 ? (3)") or st.session_state.cat_q3:
-                st.session_state.cat_q3 = True
-                st.success("✅ OUI (Catégorie 1 ou 2)")
         with col2:
+            if st.button("VRAI", key="cat1_v") or st.session_state.cat_q1:
+                st.session_state.cat_q1 = True
+                st.success("✅ VRAI (Catégorie 1 ou 2)")
+            if st.button("FAUX", key="cat1_f"):
+                st.error("❌ FAUX")
+        st.markdown("---")
+
+        st.subheader("2. Transpalette : Est-ce un R.485 ?")
+        col3, col4 = st.columns(2)
+        with col3:
             try: st.image("images/Image2.png") # Transpalette
             except: st.error("Image manquante")
-            if st.button("Est-ce un R.485 ? (2)") or st.session_state.cat_q2:
+        with col4:
+            if st.button("VRAI", key="cat2_v"):
+                st.error("❌ FAUX (C'est un R.366 - Transpalette)")
+            if st.button("FAUX", key="cat2_f") or st.session_state.cat_q2:
                 st.session_state.cat_q2 = True
-                st.error("❌ NON (R.366 - Transpalette)")
-            st.markdown("---")
+                st.success("✅ VRAI")
+        st.markdown("---")
+
+        st.subheader("3. Gerbeur Orange : Est-ce un R.485 ?")
+        col5, col6 = st.columns(2)
+        with col5:
+            try: st.image("images/Image3.png") # Gerbeur Orange
+            except: st.error("Image manquante")
+        with col6:
+            if st.button("VRAI", key="cat3_v") or st.session_state.cat_q3:
+                st.session_state.cat_q3 = True
+                st.success("✅ VRAI (Catégorie 1 ou 2)")
+            if st.button("FAUX", key="cat3_f"):
+                st.error("❌ FAUX")
+        st.markdown("---")
+
+        st.subheader("4. Chariot Porté : Est-ce un R.485 ?")
+        col7, col8 = st.columns(2)
+        with col7:
             try: st.image("images/Image4.png") # Porté
             except: st.error("Image manquante")
-            if st.button("Est-ce un R.485 ? (4)") or st.session_state.cat_q4:
+        with col8:
+            if st.button("VRAI", key="cat4_v"):
+                st.error("❌ FAUX (C'est un R.489 - Chariot Porté)")
+            if st.button("FAUX", key="cat4_f") or st.session_state.cat_q4:
                 st.session_state.cat_q4 = True
-                st.error("❌ NON (R.489 - Porté)")
+                st.success("✅ VRAI")
 
     # --- MODULE 3 : CAUSES ACCIDENTS ---
     elif menu_485 == "3. Causes Accidents (Auto-Test)":
