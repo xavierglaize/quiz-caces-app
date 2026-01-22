@@ -381,7 +381,7 @@ if livret == "CACES R.485 (Gerbeurs)":
 
         col_img1, col_txt1 = st.columns([3, 1])
         with col_img1:
-            try: st.image("images/quizz_plaque_de_charge_gerbeur_haut.png", use_column_width=True)
+            try: st.image("quizz_plaque_de_charge_gerbeur_haut.png", use_column_width=True)
             except: st.error("⚠️ Manque: quizz_plaque_de_charge_gerbeur_haut.png")
         with col_txt1:
             st.markdown("#### 1. Hauteur max ?")
@@ -401,7 +401,7 @@ if livret == "CACES R.485 (Gerbeurs)":
 
         col_img2, col_txt2 = st.columns([3, 1])
         with col_img2:
-            try: st.image("images/quizz_plaque_de_charge_gerbeur_milieu.png", use_column_width=True)
+            try: st.image("quizz_plaque_de_charge_gerbeur_milieu.png", use_column_width=True)
             except: st.error("⚠️ Manque: quizz_plaque_de_charge_gerbeur_milieu.png")
         with col_txt2:
             st.markdown("#### 3. Graphique")
@@ -414,7 +414,7 @@ if livret == "CACES R.485 (Gerbeurs)":
 
         col_img3, col_txt3 = st.columns([3, 1])
         with col_img3:
-            try: st.image("images/quizz_plaque_de_charge_gerbeur_bas.png", use_column_width=True)
+            try: st.image("quizz_plaque_de_charge_gerbeur_bas.png", use_column_width=True)
             except: st.error("⚠️ Manque: quizz_plaque_de_charge_gerbeur_bas.png")
         with col_txt3:
             st.markdown("#### 4. Constructeur")
